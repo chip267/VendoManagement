@@ -1,3 +1,33 @@
+.container{
+    @apply align-middle flex flex-col items-center pb-[200px]
+}
 .mainTitle{
     @apply text-center text-[31px] font-[Lexend] font-medium text-green_main mt-[75px] 
+}
+.subTitle{
+    @apply text-center text-[12px] font-[Lexend] font-medium text-grey_main opacity-90 mt-[10px]
+}
+.inputContainer1{
+    @apply  w-[307px] h-[43px] rounded-md p-4 mt-[21px] placeholder-hide_txt bg-light_green
+}
+.txtInput1{
+    @apply text-xs font-[Lexend] font-normal text-hide_txt
+}
+.inputContainer2{
+    @apply w-[307px] h-[43px] rounded-md p-4 mt-[15px] placeholder-hide_txt bg-light_green
+}
+.flexTxtLeft{
+    @apply w-[90px] text-[10px] font-[Lexend] font-semibold text-grey_main mt-2 
+}
+.flexTxtRight{
+    @apply ml-[130px] text-[10px] font-[Lexend] font-semibold text-green_main mt-2
+}
+.btnBottom{
+    @apply bg-green_main w-[307px] h-10 rounded-[10px] text-white text-xs font-[Lexend] font-medium
+}
+.txtBottom{
+    @apply text-center text-[10px] font-[Lexend] font-medium text-grey_main opacity-90 mt-[10px]
+}
+.txtUdl{
+    @apply ml-[5px] text-center text-[10px] font-[Lexend] font-medium text-green_main opacity-90 mt-[10px]
 }
