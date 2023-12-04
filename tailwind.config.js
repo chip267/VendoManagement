@@ -9,6 +9,7 @@ module.exports = {
         grey_main: "#9FA29E",
         light_green: "#E4F5E7",
         hide_txt: "#AFCCA6",
+        sidebar_txt: "#A2B8AD",
       },
       fontFamily: {
         Ephesis: ["Ephesis"],
