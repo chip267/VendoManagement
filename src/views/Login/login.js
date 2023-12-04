@@ -1,5 +1,6 @@
 import React from "react";
 import { IMG_Onboard } from "../../assets/images";
+import styles from "./login.module.scss";
 
 function Login() {
   return (
