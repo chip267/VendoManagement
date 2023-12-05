@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Route, Router, Routes } from "react-router-dom";
 import Dashboard from "../Dashboard/dashboard";
 import Products from "../Products/products";
-const tabNames = ["Dashboard", "Products"];
+import Customers from "../Customers/customers";
+const tabNames = ["Dashboard", "Products", "Customers"];
 
-const tabs = [<Dashboard />, <Products />];
+const tabs = [<Dashboard />, <Products />, <Customers />];
 
 function Sidebar() {
   const [index, SetIndex] = useState(0);
