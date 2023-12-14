@@ -3,9 +3,12 @@ import { Route, Router, Routes } from "react-router-dom";
 import Dashboard from "../Dashboard/dashboard";
 import Products from "../Products/products";
 import Customers from "../Customers/customers";
-const tabNames = ["Dashboard", "Products", "Customers"];
+import Sales from "../Sales/Sales";
+import SalesDetail from "../SalesDetail/SalesDetail";
 
-const tabs = [<Dashboard />, <Products />, <Customers />];
+const tabNames = ["Dashboard", "Products", "Customers", "Sales", "SalesDetail"];
+
+const tabs = [<Dashboard />, <Products />, <Customers />, <Sales />, <SalesDetail />];
 
 function Sidebar() {
   const [index, SetIndex] = useState(0);

@@ -1,5 +1,6 @@
 .container{
     width: 85vw;
+    
     position: relative;
     float: inline-start;
     font-family: "Lexend";
@@ -13,8 +14,24 @@
 .tb1{
     width: 55vw;
 }
+
+.wrap-all{
+    display: flex;
+    justify-content: space-around;
+    margin-left: 20px;
+    .wrap-left{
+        flex: 52%;
+    }
+    .wrap-right{
+        flex: 34%;
+    }
+}
+
+
 .options{
+    display: flex;
     width: 55vw;
+    height: 5vh;
     position: relative;
     background-color: white;
     margin-left: 20px;
@@ -90,13 +107,19 @@ select{
 //         padding-left: 1vw;
 //     }
 // }
-.box-info{
-    display: grid;
-    grid-template-columns: 17vw  17vw 17vw;
-    gap: 26px;
+.cards{
+    // display: grid;
+    // grid-template-columns: 17vw 17vw 17vw;
+    // gap: 26px;
+    width: 55vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
     margin: 20px;
 }
-.box-info li {
+.cards li {
+    width: 28%;
     padding: 24px;
     background: #ffffff;
     border: 1px solid #E2EFE8;
@@ -114,7 +137,7 @@ select{
 .logo svg{
     margin: 10px 0 0 12px;
 }
-.box-info li img {
+.cards li img {
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -133,6 +156,7 @@ select{
 
 .chart{
     width: 55vw;
+    height: 60vh;
     position: relative;
     border: 1px solid #E2EFE8;
     border-radius: 25px;
@@ -184,14 +208,13 @@ select{
 
 .best-selling-product{
     width: 27vw;
-    height: 70vh;
-    margin-top: 76px;
+    height: 84vh;
     border: 1px solid #E2EFE8;
     border-radius: 22px;
     margin-left: 20px;
 
-    position: unset;
-    inset: 68px 25px 20px auto;
+    position: relative;
+    //inset: 68px 25px 20px auto;
 
 }
 
@@ -203,15 +226,9 @@ select{
 .bs-table{
     width: 27vw;
 }
-.td-bsp{
-    color: #0F2319;
-    font-size: 16px; 
-    font-weight: 500;
-    line-height: 20px;
-}
+
 
 .label{
-    text-align: start;
     height: 50px;
     font-weight: 400;
     font-size: 12px;
@@ -219,12 +236,16 @@ select{
     color: #B6CAC0;
     .bs-name{
         width:45%;
+        padding-left: 20px;
+        text-align: start;
     }
     .bs-code{
         width:35%;
+        text-align: start;
     }
     .bs-price{
         width:20%;
+        text-align: start;
     }
 }
 
@@ -235,18 +256,20 @@ select{
     font-size: 10px;
     line-height: 20px;
 }
-.product img{
-    width: 30px;
-    height: 30px;
-    border-radius: 5px;
-}
+
 .product {
+    margin-left: 20px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     text-align: start;
     .product-name{
         margin-left: 10px;
+    }
+    img{
+        width: 30px;
+        height: 30px;
+        border-radius: 5px;
     }
 }
 // :root {
