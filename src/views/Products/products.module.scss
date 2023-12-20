@@ -91,6 +91,8 @@
 }
 
 .wrapper-left{
+    display: flex;
+    flex-direction: column;
     width: 50vw;
     height: 75vh;
     display: flex;
@@ -129,8 +131,56 @@
     color: #0F2319;
     border-bottom: 3px solid orange;
 }
-  
+//************ product card items ************
+.products {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    margin-top: 20px;
+  }  
+  .product{
+    display: flex;
+    border: 1px solid gray;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  }
+  .productDetail {
+    margin: 15px ;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-bottom: 10px;
+  }
+  .productImage {
+    margin: 15px 0 15px 15px ;
+    width: 50px;
+    height: 66px;
+    object-fit: cover;
+  }
+  .productType {
+    font-size: 10px;
+    font-weight: 400;
+    color: #B6CAC0;
+  }
+  .productCapacity{
+    //display: block;
+    font-size: 10px;
+    font-weight: 400;
+    color: #B6CAC0;
+  }
 
+  .productName {
+    //display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #0F2319;
+  }
+  
+  .productPrice {
+    //display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #FABC50;
+  }
 
 // *********** detail payment ***********
 .payment{
@@ -175,6 +225,12 @@
     margin-bottom: 10px;
   }
   
+  .checkbox {
+    float: left;
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+
   .image {
     width: 50px;
     height: 66px;
@@ -209,17 +265,17 @@
   
   .decrement,
   .increment {
-    padding: 5px;
+    padding: 3px;
     font-size: 11px;
     color: #388634;
     background-color: #EBFAED;
     border: none;
-    border-radius: 5px;
+    border-radius: 3px;
     cursor: pointer;
   }
   
   
-  //******** payment ********
+  //******** total payment ********
   .summary {
     display: flex;
     flex-direction: column;
@@ -230,14 +286,18 @@
   .subtotal,
   .tax,
   .discount,
-  .shipping,
+  .shipping{
+    font-weight: 400;
+    font-size: 11px;
+    color: #B6CAC0;
+  }
+
   .total {
+    font-weight: 500;
     font-size: 15px;
-    color: black;
+    color: #0F2319;
   }
   
-  .total {
-    font-weight: bold;
-  }
+
   
   

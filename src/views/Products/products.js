@@ -172,6 +172,62 @@ const Product = () => {
               </button>
             ))}
           </div>
+          <div className={cx("products")}>
+            <div className={cx("product")}>
+              <img src="" className={cx("productImage")} />
+              <div className={cx("productDetail")}>
+                <div className={cx("productName")}>Western Digital Elements</div>
+                <div className={cx("productType")}>Hard drive</div>
+                <div className={cx("productCapacity")}>1.5TB</div>
+                <div className={cx("productPrice")}>1290000 d</div>
+              </div>
+            </div>
+            <div className={cx("product")}>
+              <img src="" className={cx("productImage")} />
+              <div className={cx("productDetail")}>
+                <div className={cx("productName")}>Western Digital Elements</div>
+                <div className={cx("productType")}>Hard drive</div>
+                <div className={cx("productCapacity")}>1.5TB</div>
+                <div className={cx("productPrice")}>1290000 d</div>
+              </div>
+            </div>
+            <div className={cx("product")}>
+              <img src="" className={cx("productImage")} />
+              <div className={cx("productDetail")}>
+                <div className={cx("productName")}>Western Digital Elements</div>
+                <div className={cx("productType")}>Hard drive</div>
+                <div className={cx("productCapacity")}>1.5TB</div>
+                <div className={cx("productPrice")}>1290000 d</div>
+              </div>
+            </div>
+            <div className={cx("product")}>
+              <img src="" className={cx("productImage")} />
+              <div className={cx("productDetail")}>
+                <div className={cx("productName")}>Western Digital Elements</div>
+                <div className={cx("productType")}>Hard drive</div>
+                <div className={cx("productCapacity")}>1.5TB</div>
+                <div className={cx("productPrice")}>1290000 d</div>
+              </div>
+            </div>
+            <div className={cx("product")}>
+              <img src="" className={cx("productImage")} />
+              <div className={cx("productDetail")}>
+                <div className={cx("productName")}>Western Digital Elements</div>
+                <div className={cx("productType")}>Hard drive</div>
+                <div className={cx("productCapacity")}>1.5TB</div>
+                <div className={cx("productPrice")}>1290000 d</div>
+              </div>
+            </div>
+            <div className={cx("product")}>
+              <img src="" className={cx("productImage")} />
+              <div className={cx("productDetail")}>
+                <div className={cx("productName")}>Western Digital Elements</div>
+                <div className={cx("productType")}>Hard drive</div>
+                <div className={cx("productCapacity")}>1.5TB</div>
+                <div className={cx("productPrice")}>1290000 d</div>
+              </div>
+            </div>
+          </div>
         </div>
         
         <div className={cx("wrapper-right")}>
@@ -185,6 +241,7 @@ const Product = () => {
             <div className={styles.items}>
               {orderItems.map((item, index) => (
                 <div key={index} className={styles.item}>
+                  <input type="checkbox" className={styles.checkbox} />
                   <img src={item.image}  className={styles.image} />
                   <div className={cx("detail")}>
                     <div className={styles.name}>{item.name}</div>
