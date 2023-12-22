@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Route, Router, Routes } from "react-router-dom";
 import Dashboard from "../Dashboard/dashboard";
 import Products from "../Products/products";
+import Customers from "../Customers/customers";
+const tabNames = ["Dashboard", "Products", "Customers"];
 import { IMG_Logo } from "../../assets/images";
 import { IC_Home } from "../../assets/icons";
-import Customers from "../Customer/customer";
 import Sales from "../Sales/sales";
 import Message from "../Message/message";
 import Settings from "../Settings/settings";
@@ -25,6 +26,7 @@ const tabs = [
   <Message />,
   <Settings />,
 ];
+
 
 function Sidebar() {
   const [index, SetIndex] = useState(0);
