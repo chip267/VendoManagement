@@ -3,7 +3,6 @@ import { Route, Router, Routes } from "react-router-dom";
 import Dashboard from "../Dashboard/dashboard";
 import Products from "../Products/products";
 import Customers from "../Customers/customers";
-const tabNames = ["Dashboard", "Products", "Customers"];
 import { IMG_Logo } from "../../assets/images";
 import { IC_Home } from "../../assets/icons";
 import Sales from "../Sales/sales";
