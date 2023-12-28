@@ -3,23 +3,15 @@ import styles from './dashboard.module.scss';
 import classNames from "classnames/bind";
 import "@fontsource/lexend";
 import { IMG_Logo } from "../../assets/images";
+import BestSellingItem from "./components/bestSellingItem";
+const imgLogoUrl = IMG_Logo;
 const cx = classNames.bind(styles);
-
 function Dashboard() {
-  // return (
-  //   <div className=" align-middle flex flex-col items-center pb-[200px]">
-  //     <h1 className=" text-center text-[31px] font-[Lexend] font-medium text-green_main mt-[75px] ">
-  //       Dashboard
-  //     </h1>
-  //   </div>
-  // );
-
   return (
     <div className={cx("container")}>
       <div className={cx("header")}>
         <h1>Dashboard</h1>
       </div>
-
       <div className={cx("wrap-all") + " dashboard-content"}>
         <div className="flex flex-row">
           <div className="flex flex-col w-[60%] overview-side">
@@ -95,13 +87,9 @@ function Dashboard() {
           </div>
           <div className="flex flex-col w-[40%] best-selling-side">
             <div className={cx("best-selling-product")}>
-
               <div className={cx("table-title")}>
-
                 <h3>Best selling products</h3>
-
               </div>
-
               <table className={cx("bs-table")}>
                 <thead>
                   <tr className={cx("label")}>
@@ -110,20 +98,11 @@ function Dashboard() {
                     <th className={cx("bs-price")}>Price</th>
                   </tr>
                 </thead>
-
                 <tbody>
-                  <tr className={cx("data")}>
-                    <td className={cx("product")}>
-                      <img scr={IMG_Logo} alt="" />
-                      <div className={cx("product-name")}>Product Name 1</div>
-                    </td>
-                    <td className={cx("code")}>
-                      <div>ABC123</div>
-                    </td>
-                    <td className={cx("price")}>
-                      <div>$19.99</div>
-                    </td>
-                  </tr>
+                  <BestSellingItem title="Product Name 1" price="$100" imageURL={imgLogoUrl} />
+                  <BestSellingItem title="Product Name 2" price="$100" imageURL={imgLogoUrl} />
+                  <BestSellingItem title="Product Name 3" price="$100" imageURL={imgLogoUrl} />
+
                 </tbody>
 
               </table>
@@ -132,38 +111,6 @@ function Dashboard() {
 
           </div>
         </div>
-
-
-
-        {/* <div className={cx("table-data")}>
-        <div className={cx("order")}>
-            <div className="head">
-              <h3>Recent Orders</h3>
-            </div>
-
-            <table className={cx("best-sale")}>
-                <tr className={cx("label" )}>
-                  <th className={cx("bs-name")}>Product Name</th>
-                  <th className={cx("bs-code")}>Product Code</th>
-                  <th className={cx("bs-price")}>Price</th>
-                </tr>
-
-                <tr className={cx("data")}>
-                  <td className={cx("product")}>
-                    <img scr="" alt="" />
-                    <div className={cx("product-name")}>Product Name 1</div>
-                  </td>
-                  <td className={cx("code")}>
-                    <div>ABC123</div>
-                  </td>
-                  <td className={cx("price")}>
-                    <div>$19.99</div>
-                  </td>
-                </tr>
-            </table>
-        </div> 
-
-        </div>*/}
       </div>
     </div >
   );
