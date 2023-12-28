@@ -1,34 +1,67 @@
 import React, { useState } from "react";
-import { Route, Router, Routes } from "react-router-dom";
 import Dashboard from "../Dashboard/dashboard";
 import Products from "../Products/products";
 import Customers from "../Customers/customers";
-import Sales from "../Sales/Sales";
-import SalesDetail from "../SalesDetail/SalesDetail";
+import { IMG_Logo } from "../../assets/images";
+import { IC_Home } from "../../assets/icons";
+import Sales from "../Sales/sales";
+import Message from "../Message/message";
+import Settings from "../Settings/settings";
 
-const tabNames = ["Dashboard", "Products", "Customers", "Sales", "SalesDetail"];
+const tabNames = [
+  "Dashboard",
+  "Products",
+  "Customers",
+  "Sales",
+  "Message",
+  "Settings",
+];
 
-const tabs = [<Dashboard />, <Products />, <Customers />, <Sales />, <SalesDetail />];
-
+const tabs = [
+  <Dashboard />,
+  <Products />,
+  <Customers />,
+  <Sales />,
+  <Message />,
+  <Settings />,
+];
 function Sidebar() {
-  const [index, SetIndex] = useState(0);
+  const [index, setIndex] = useState(0);
+
   const tabList = tabNames.map((tab) => {
+    const key = tabNames.indexOf(tab);
     return (
-      <li>
-        <button onClick={() => SetIndex(tabNames.indexOf(tab))}>{tab}</button>
+      <li key={key} className="flex mt-[25px] ml-[24px]">
+        <img className="w-[20px]" src={IC_Home} alt="Mô tả hình ảnh" />
+        <button
+          onClick={() => setIndex(tabNames.indexOf(tab))}
+          className="text-[11px] font-[Lexend] font-medium text-sidebar_txt ml-[16px]"
+        >
+          {tab}
+        </button>
       </li>
     );
   });
+
+  const contentStyleTab = {
+    width: "80%",
+    overflow: "hidden",
+    overflowY: "scroll",
+  };
+  const contentStyleSideBar = {
+    width: "20%",
+  };
   return (
-    <div>
-      <div>
-        <div className=" w-fit">
-          <p>Hello, Thanh Hien</p>
-          <p>See your account</p>
-          <ul className="my-10">{tabList}</ul>
-        </div>
+    <div style={{ display: "flex" }}>
+      <div className="side-bar" style={contentStyleSideBar}>
+        <img
+          className="mt-[31px] ml-[24px] w-[66px]"
+          src={IMG_Logo}
+          alt="Mô tả hình ảnh"
+        />
+        <ul className="my-10">{tabList}</ul>
       </div>
-      <div>{tabs.at(index)}</div>
+      <div className="tab-side" style={contentStyleTab}>{tabs[index]}</div>
     </div>
   );
 }
