@@ -99,9 +99,7 @@ function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  <BestSellingItem title="Product Name 1" price="$100" imageURL={imgLogoUrl} />
-                  <BestSellingItem title="Product Name 2" price="$100" imageURL={imgLogoUrl} />
-                  <BestSellingItem title="Product Name 3" price="$100" imageURL={imgLogoUrl} />
+                  <BestSellingItem name="IphoneSSS 12" price="$1000" code="123456" imageURL={imgLogoUrl} />
 
                 </tbody>
 
