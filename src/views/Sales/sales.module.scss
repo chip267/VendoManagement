@@ -12,12 +12,9 @@
     font-weight: 500;
     color: #0F2319;
 }
-.mini-home-logo{
-    margin: 15px 0 15px 0;
-}
-/* Navigation bar */
 .btn-bar{
     width: 80vw;
+    margin-top: 20px;
 }
 .search-bar{
     padding: 10px;
@@ -27,17 +24,6 @@
     border-radius: 12px;
     box-sizing: border-box;
     font-size: 12px;
-}
-.btn-add{
-    width: 135px;
-    height: 37px;
-    margin-left: 20px;
-    background-color: #2C7A51;
-    color: #ffffff;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 20px;
 }
 .btn-setting{
     float: right;
@@ -55,8 +41,6 @@
         margin-right: auto;
     }
 }
-
-/* Table content */
 .table-content{
     width: 75vw;
     margin-top: 20px;
@@ -74,24 +58,29 @@
     .sort-icon{
         margin-left: 6px;
     }
-    .delete{
-        .btn-delete{
-            width: 10px;
-            height: 10px;
-            border-radius: 5px;
-            margin-top: 5px;
-            background-color: #ff0f0f;
-            path{
-                fill: #ffffff;
-            }
+    .label-status{
+        padding-left: 14px;
+    }
+    .status{
+        .status-state{
+            display: inline-flex;
+            color: #0CE622;
+            background-color: #EBFAED;
+            padding: 2px 10px ;
+            border-radius: 10px;
+        }
+    }
+    .detail{
+        padding-left: 20px;
+        .btn-detail{
             &:hover{
-                background-color: #ffffff;
                 path{
-                    fill: #000000;
+                    fill: #0CE622;
                 }
             }
         }
     }
+  
 }
 
 .table-content tr{
@@ -116,25 +105,6 @@ table{
     border-collapse: collapse;
 }
 
-
-//=====membership: gold=====
-.membership{
-    display: inline-flex;
-    color: #FFC226;
-    background-color: #FEF7E6;
-    padding: 2px 10px ;
-    border-radius: 10px;
-    margin: 0 0 28px 22px;
-}
-//=====membership: silver=====
-// .membership{
-//     display: inline-flex;
-//     color: #FFC226;
-//     background-color: #F5F5F5;
-//     padding: 2px 10px ;
-//     border-radius: 10px;
-//     margin: 0 0 28px 22px;
-// }
 
 
 .table-content tr{

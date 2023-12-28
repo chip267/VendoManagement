@@ -1,0 +1,180 @@
+.container{
+    width: 40vw;
+    height: 100vh;
+    font-family: "Lexend";
+    border: 1px solid black;
+    border-radius: 20px 0 0 20px;
+}
+.top-content{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+.tb1{
+    margin-left: 20px;
+    //display: inline-block;
+    width: 20vw;
+    padding-top: 20px;
+    //height: 15%;
+    th{
+        text-align: left;
+        font-size: 11px;
+        font-weight: 400;
+        color: #B6CAC0;
+    }
+    td{
+        font-size: 10px;
+        font-weight: 400;
+        color: #385145;
+    }
+}
+.status{
+    //display: inline-block;
+    display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+    width: 10vw;
+    height: 15vh;
+    //margin: 15px;
+    border: 1.5px solid #E2EFE8;
+    border-radius: 25px;
+    .code{
+        font-size: 18px;
+        font-weight: 600;
+        color: #2C7A51;
+
+    }
+    .status-state{
+        align-items: center;
+        justify-content: center;
+        width: 69px;
+        height: 21px;
+        font-size: 9px;
+        font-weight: 400;
+        color: #0CE622;
+        display: inline-flex;
+        background-color: #EBFAED;
+        border-radius: 10px;
+    }
+}
+.customer-info{
+    margin: 30px 20px 40px 20px;
+}
+.tb2{
+    width: 100%;
+    .data{
+        font-size: 10px;
+        font-weight: 400;
+    }
+    .people2{
+        .phone-num{
+            color: #B6CAC0;
+        }
+    }
+}
+.tb2 th{
+    text-align: left;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #B6CAC0;
+}
+.title, .data{
+    .tt-cus{
+        width: 40%;
+    }
+    .tt-pay{
+        width: 25%;
+    }
+    .tt-deli{
+        width: 35%;
+    }
+}
+
+.people2{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: start;
+    .avatar2{
+        width: 38px;
+        height: 38px;
+        border-radius: 7px;
+    }
+    .people-de2{
+        margin-left: 10px;
+    }
+}
+
+//
+.purchase-detail{
+    width: 40vw;
+    //height: 84vh;
+    //border: 1px solid #E2EFE8;
+    //border-radius: 22px;
+
+    position: relative;
+    //inset: 68px 25px 20px auto;
+
+}
+.table-title{
+    height: 6%;  
+    margin: 20px;
+}
+
+.tb3{
+    width: 40vw;
+}
+.tb3 tr{
+    border-collapse: collapse;
+}
+
+.label{
+    height: 50px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+    color: #B6CAC0;
+    .lb-product{
+        width:40%;
+        padding-left: 20px;
+        text-align: start;
+    }
+    .lb-price{
+        width:20%;
+        text-align: start;
+    }
+    .lb-quantity{
+        width:20%;
+        text-align: start;
+    }
+    .lb-total{
+        width:20%;
+        text-align: start;
+    }
+}
+
+
+.purchase-data{
+    margin-top: 12px;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 20px;
+}
+
+.product {
+    margin-left: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: start;
+    .product-name{
+        margin-left: 10px;
+    }
+    img{
+        width: 30px;
+        height: 30px;
+        border-radius: 5px;
+    }
+}

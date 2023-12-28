@@ -25,7 +25,6 @@ const tabs = [
   <Message />,
   <Settings />,
 ];
-
 function Sidebar() {
   const [index, setIndex] = useState(0);
 
