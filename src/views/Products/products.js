@@ -1,40 +1,3 @@
-// import React from "react";
-// import styles from "./products.module.scss";
-// import classNames from "classnames/bind";
-// import "@fontsource/lexend";
-
-// const cx = classNames.bind(styles);
-
-
-// function Products() {
-//   return (
-//     // <div className=" align-middle flex flex-col items-center pb-[200px]">
-//     //   <h1 className=" text-center text-[31px] font-[Lexend] font-medium text-green_main mt-[75px] ">
-//     //     Products
-//     //   </h1>
-//     // </div>
-
-    
-//   );
-// }
-
-// export default Products;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// product.js
-
 import React, { useState } from "react";
 import styles from "./products.module.scss";
 import classNames from "classnames/bind";
@@ -267,18 +230,33 @@ const Product = () => {
                 </div>
               ))}
             </div>
-            <div className={styles.summary}>
-              <p className={styles.subtotal}>
-                Subtotal: {getSubtotal().toLocaleString()} d
-              </p>
-              <p className={styles.tax}>Tax: {getTax().toLocaleString()} d</p>
-              <p className={styles.discount}>Discount: </p>
-              <p className={styles.shipping}>Shipping cost: </p>
-              <p className={styles.total}>
-                Total: {getTotal().toLocaleString()} d
-              </p>
+            <div className={cx("summary")}>
+              <label className={cx("subtotal")}>
+                Subtotal: 
+                <label>{getSubtotal().toLocaleString()}</label>
+              </label>
+              <label className={cx("tax")}>
+                Tax: 
+                <label>{getTax().toLocaleString()}</label>
+              </label>
+              <label className={cx("discount")}>
+                Discount: 
+                <label></label>
+              </label>
+              <label className={cx("shipping")}>
+                Shipping cost: 
+                <label></label>
+              </label>
+              <label className={cx("total")}>
+                Total: 
+                <label>{getTotal().toLocaleString()}</label>
+              </label>
+            </div>
+            <div className={cx("btn-payment")}>
+                <button className={cx("btn")}>Payment</button>
             </div>
           </div>
+          
         </div>
       </div>
       

@@ -184,7 +184,10 @@
 
 // *********** detail payment ***********
 .payment{
+    display: flex;
+    flex-direction: column;
     width: 90%;
+    height: 90%;
     margin: 20px auto;
     padding: 20px;
     border: 1px solid gray;
@@ -279,23 +282,48 @@
   .summary {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    //align-items: flex-start;
     margin-top: 20px;
+    .subtotal,
+    .tax,
+    .discount,
+    .shipping{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      font-weight: 400;
+      font-size: 11px;
+      color: #B6CAC0;
+    }
   }
   
-  .subtotal,
-  .tax,
-  .discount,
-  .shipping{
-    font-weight: 400;
-    font-size: 11px;
-    color: #B6CAC0;
-  }
+  
 
   .total {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     font-weight: 500;
     font-size: 15px;
     color: #0F2319;
+  }
+
+  .btn-payment{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .btn{
+      width: 200px;
+      height: 40px;
+      color: #FFFFFF;
+      background-color: #2C7A51;
+      border-radius: 12px;
+      &:active {
+        background-color: #369763;
+      }
+    }
+    
   }
   
 
