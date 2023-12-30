@@ -2,12 +2,17 @@ import React, { useState } from "react";
 import styles from "./products.module.scss";
 import classNames from "classnames/bind";
 import Product from "./components/product";
-import OrderItem from "./components/orderItem";
-import OrderInformation from "./components/orderInformation";
+import ProductCart from "./components/productCart";
+import ProductApiController from "../../api/products";
+import ListWithLoading from "../GeneralComponents/ListWithLoading";
+import AddProductForm from "./components/addProductForm";
+import { Pagination } from "@mui/material";
+import { useEffect } from "react";
 import { IMG_Logo } from "../../assets/images";
 const cx = classNames.bind(styles);
 const imgUrlTest = IMG_Logo
-
+const maxItemPerPage = 6;
+let totalCounts = 0;
 // Define the options for the selection bar
 const options = [
   { value: "all", label: "All products" },
@@ -16,83 +21,77 @@ const options = [
   { value: "ram", label: "Ram" },
   { value: "rom", label: "Rom" },
 ];
-// Define the tax rate
-const taxRate = 0.004;
+const cartItems = [
+  {
+    name: "Western Digital Elements",
+    image: imgUrlTest,
+    price: 1290000,
+    quantity: 2,
+  },
+  {
+    name: "Western Digital Elements",
+    image: imgUrlTest,
+    price: 1290000,
+    quantity: 2,
+  }
+];
+const taxRate = 0.03;
+//Store products will include current page products, next page number and previous page number.
+//And total counts of products.
+//Each time a page change happens, we will update store products by calling api.
+//Get total counts of products from api
+async function initStoreProducts() {
+  const response = await ProductApiController.getProducts(1, maxItemPerPage);
+  const results = response.data.results;
+  totalCounts = response.data.totalDocuments;
+  console.log(response);
+  return results;
+}
 
-// Define the product component
+
+
+
+//As array
+function initCartItems() {
+  return cartItems;
+}
+const transitionTime = 500;
+
 const Products = () => {
   // Use a state variable to store the current selected option
   const [selectedOption, setSelectedOption] = useState('null');
-  const cartItems = [
-    {
-      name: "Western Digital Elements",
-      image: imgUrlTest,
-      price: 1290000,
-      quantity: 2,
-    },
-    {
-      name: "Western Digital Elements",
-      image: imgUrlTest,
-      price: 1290000,
-      quantity: 2,
-    },
+  const [loading, setLoading] = useState(false);
+  const [storeProducts, setStoreProducts] = useState(() => initStoreProducts());
+  const [pageIndex, setPageIndex] = useState(1);
+  const [orderItems, setOrderItems] = useState(() => initCartItems());
+  //On press add product button. Hide the cart section and show the add product 
+  const [isAddProduct, setIsAddProduct] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const keyToAnimate = "keyToAnimate"
+  //Use api on first render and when page change
+  useEffect(() => {
+    fetchProducts();
+  }, [pageIndex]);
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await ProductApiController.getProducts(pageIndex, maxItemPerPage);
+      const results = response.data.results;
+      totalCounts = response.data.totalDocuments;
+      setStoreProducts(results);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  ];
 
-  const storeProducts = [
-    {
-      name: "Western Digital Elements",
-      price: "1290000 d",
-      type: "Hard drive",
-      id: "1",
-      imgUrl: imgUrlTest
-    },
-    {
-      name: "Western Digital Elements",
-      price: "1290000 d",
-      type: "Hard drive",
-      id: "2",
-      imgUrl: imgUrlTest
-    },
-    {
-      name: "Western Digital Elements",
-      price: "1290000 d",
-      type: "Hard drive",
-      id: "1",
-      imgUrl: imgUrlTest
-    },
-    {
-      name: "Western Digital Elements",
-      price: "1290000 d",
-      type: "Hard drive",
-      id: "2",
-      imgUrl: imgUrlTest
-    },
-    {
-      name: "Western Digital Elements",
-      price: "1290000 d",
-      type: "Hard drive",
-      id: "1",
-      imgUrl: imgUrlTest
-    },
-    {
-      name: "Western Digital Elements",
-      price: "1290000 d",
-      type: "Hard drive",
-      id: "2",
-      imgUrl: imgUrlTest
-    },
-  ];
 
   // Define a function that handles the change of the selected option
   const handleChange = (option) => {
     setSelectedOption(option);
   };
-
-  //************************************ */
-  // Use a state variable to store the items
-  const [orderItems, setOrderItems] = useState(cartItems);
-
   // Define a function that updates the quantity of an item
   const updateQuantity = (index, increment) => {
     // Make a copy of the order items array
@@ -118,13 +117,11 @@ const Products = () => {
     // Return the subtotal
     return subtotal;
   };
-
   // Define a function that calculates the tax of the order
   const getTax = () => {
     // Return the product of the subtotal and the tax rate
     return getSubtotal() * taxRate;
   };
-
   // Define a function that calculates the total of the order
   const getTotal = () => {
     // Return the sum of the subtotal and the tax
@@ -137,7 +134,14 @@ const Products = () => {
     setOrderItems([]);
   };
   //************************************ */
-
+  //Switch between cart and add product
+  function switchCartAndAddProduct() {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setIsAddProduct(!isAddProduct);
+      setIsTransitioning(false);
+    }, transitionTime);
+  }
   return (
     <div className={cx("container")}>
       <div className={cx("header")}>
@@ -149,7 +153,9 @@ const Products = () => {
             <input className={cx("search-bar")} type="text number" placeholder="Search" />
           </span>
           <span>
-            <button className={cx("btn-add")}>+ Add Items</button>
+            <button className={cx("btn-add")} onClick={switchCartAndAddProduct}>
+              + Add product
+            </button>
           </span>
         </span>
         <span className={cx("right-side-btn-group")}>
@@ -168,8 +174,6 @@ const Products = () => {
             </button>
           </span>
         </span>
-
-
       </div>
       <div className={cx("wrapper")}>
         <div className={cx("wrapper-left")}>
@@ -186,34 +190,43 @@ const Products = () => {
             ))}
           </div>
           <div className={cx("products")}>
-            {storeProducts.map((product) => (
-              <Product productData={product} />
-            ))}
+            <ListWithLoading
+              isLoading={loading}
+              data={storeProducts}
+              renderItem={(item, index) => <Product key={index} productData={item} />}
+            />
           </div>
+          <Pagination
+            count={Math.ceil(totalCounts / maxItemPerPage)}
+            page={pageIndex}
+            onChange={(event, value) => setPageIndex(value)}
+            className={styles.pagination}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
+          />
         </div>
         <div className={cx("wrapper-right")}>
-          <div className={styles.payment}>
-            <div className={styles.heading}>
-              <h1>Customer Order</h1>
-              <button className={styles.clear} onClick={clearOrder}>
-                Clear
-              </button>
-            </div>
-            <div className={styles.items}>
-              {orderItems.map((item, index) => (
-                <OrderItem
-                  key={index}
-                  itemData={item}
-                  index={index}
-                  updateQuantity={updateQuantity}
-                />
-              ))}
-            </div>
-            <OrderInformation items={orderItems} taxRate={taxRate} />
-          </div>
+          {!isAddProduct ? (
+            <ProductCart
+              clearOrder={clearOrder}
+              orderItems={orderItems}
+              updateQuantity={updateQuantity}
+              taxRate={taxRate}
+              addtionalContainerClassName={cx({
+                [cx("state-slide-out")]: isTransitioning,
+              })}
+            />
+          ) : (
+            <AddProductForm
+              addProductHandler={switchCartAndAddProduct}
+              addtionalContainerClassName={cx({
+                [cx("state-slide-down")]: isTransitioning,
+              })}
+            />
+          )}
         </div>
       </div>
-
     </div>
   );
 };

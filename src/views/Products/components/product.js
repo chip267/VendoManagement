@@ -6,11 +6,11 @@ const cx = classNames.bind(styles);
 const Product = ({ productData, onClick }) => {
     return (
         <div className={cx("product")} key={productData.id} id={productData.id}>
-            <img src={productData.imgUrl} className={cx("productImage")} alt="Product" />
+            <img src={productData.images[0].url} className={cx("productImage")} alt="Product" />
             <div className={cx("productDetail")}>
-                <div className={cx("productName")}> {productData.name}</div>
+                <div className={cx("productName")}> {productData.productName}</div>
                 <div className={cx("productType")}> {productData.type}</div>
-                <div className={cx("productPrice")}> {productData.price}</div>
+                <div className={cx("productPrice")}> {productData.sellPrice} vnd</div>
             </div>
         </div>
     );

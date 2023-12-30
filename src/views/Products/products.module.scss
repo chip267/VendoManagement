@@ -52,7 +52,14 @@
   font-size: 12px;
   font-weight: 500;
   line-height: 20px;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
 }
+
 
 .btn-plus {
   float: right;
@@ -230,13 +237,90 @@
   display: flex;
   flex-direction: column;
   width: 90%;
-
   margin: 20px auto;
   padding: 20px;
   border: 1px solid gray;
   border-radius: 30px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  animation: slideIn 0.5s forwards;
+
 }
+
+//On click on product card. The cart will slide away and the payment will slide in.
+.add-product-form {
+
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid gray;
+  border-radius: 30px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  animation: slideUp 0.5s forwards;
+
+}
+
+.state-slide-in {
+  animation: slideIn 0.5s forwards;
+}
+
+.state-slide-out {
+  animation: slideOut 0.5s forwards;
+}
+
+.state-slide-up {
+  animation: slideUp 0.5s forwards;
+}
+
+.state-slide-down {
+  animation: slideDown 0.5s forwards;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(200%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(200%);
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(0%);
+  }
+
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+
+
 
 .heading {
   display: flex;
