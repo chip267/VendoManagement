@@ -17,53 +17,68 @@ const AddProductForm = ({ addProductHandler, key, addtionalContainerClassName })
 
     return (
         <div className={cx("add-product-form") + " " + addtionalContainerClassName} key={key}>
-            <div className={cx("product-name")}>
+            <div className={cx("add-product-title-container")}>
+                <h2 className={cx("add-product-title")}>
+                    Add product</h2>
+
+                <div className={cx("add-product-title-underline")}></div>
+            </div>
+            <div className={cx("form-line")}>
                 <label htmlFor="product-name">Product name</label>
                 <input type="text" id="product-name" onChange={(e) => setProductName(e.target.value)} />
+
             </div>
-            <div className={cx("type")}>
+            <div className={cx("form-line")}>
                 <label htmlFor="type">Type</label>
                 <input type="text" id="type" onChange={(e) => setType(e.target.value)} />
             </div>
-            <div className={cx("brand")}>
+            <div className={cx("form-line")}>
                 <label htmlFor="brand">Brand</label>
                 <input type="text" id="brand" onChange={(e) => setBrand(e.target.value)} />
+
             </div>
-            <div className={cx("manufacturer")}>
+            <div className={cx("form-line")}>
                 <label htmlFor="manufacturer">Manufacturer</label>
                 <input type="text" id="manufacturer" onChange={(e) => setManufacturer(e.target.value)} />
             </div>
-            <div className={cx("country-origin")}>
+            <div className={cx("form-line")}>
                 <label htmlFor="country-origin">Country origin</label>
                 <input type="text" id="country-origin" onChange={(e) => setCountryOrigin(e.target.value)} />
             </div>
-            <div className={cx("sell-price")}>
+            <div className={cx("form-line")}>
                 <label htmlFor="sell-price">Sell price</label>
                 <input type="number" id="sell-price" onChange={(e) => setSellPrice(e.target.value)} />
             </div>
-            <div className={cx("import-price")}>
+            <div className={cx("form-line")}>
                 <label htmlFor="import-price">Import price</label>
                 <input type="number" id="import-price" onChange={(e) => setImportPrice(e.target.value)} />
             </div>
-            <div className={cx("quantity")}>
+            <div className={cx("form-line")}>
                 <label htmlFor="quantity">Quantity</label>
                 <input type="number" id="quantity" onChange={(e) => setQuantity(e.target.value)} />
             </div>
-            <div className={cx("images")}>
+            <div className={cx("form-line", "images")}>
                 <label htmlFor="images">Images</label>
-                <input type="file" id="images" onChange={(e) => setImages(e.target.value)} />
+                <input
+                    accept=".jpg, .jpeg, .png"
+                    type="file"
+                    id="images"
+                    onChange={(e) => setImages(e.target.files)} />
             </div>
             <button className={cx("add-product-button")} onClick={() => addProductHandler({
-                productName: productName,
-                type: type,
-                brand: brand,
-                manufacturer: manufacturer,
-                countryOrigin: countryOrigin,
-                sellPrice: sellPrice,
-                images: images
-            })}>Add product</button>
+                productName,
+                type,
+                brand,
+                manufacturer,
+                countryOrigin,
+                sellPrice,
+                importPrice,
+                quantity,
+                images
+            })}>
+                Add product
+            </button>
         </div>
-
     );
 }
 export default AddProductForm;

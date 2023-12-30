@@ -1,4 +1,5 @@
 .container {
+  --switch-transition-duration: 0.3s;
   width: 100%;
   position: relative;
   float: right;
@@ -54,9 +55,13 @@
   line-height: 20px;
   transition: all 0.2s ease-in-out;
 
+  overflow: hidden;
+
   &:hover {
     transform: scale(1.05);
   }
+
+
 
 }
 
@@ -175,14 +180,33 @@
   margin-top: 20px;
 }
 
+.productQuantity {
+
+  font-size: 15px;
+  font-weight: 400;
+
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+
+  &.in-stock {
+    color: #388634;
+  }
+
+  &.out-of-stock {
+    color: #B6CAC0;
+  }
+
+}
+
 .product {
   display: flex;
+  position: relative;
   border: 1px solid gray;
   border-radius: 10px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-
 
   &:hover {
     transform: scale(1.05);
@@ -218,6 +242,7 @@
   color: #B6CAC0;
 }
 
+//Each product section
 .productName {
   //display: block;
   font-size: 14px;
@@ -232,6 +257,18 @@
   color: #FABC50;
 }
 
+
+
+//For storing, doesnt display
+.productBrand,
+.productManufacturer,
+.productDescription,
+.productCountryOrigin,
+.productImportPrice,
+.productImages {
+  display: none;
+}
+
 // *********** detail payment ***********
 .payment {
   display: flex;
@@ -243,40 +280,112 @@
   border-radius: 30px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
-  animation: slideIn 0.5s forwards;
+  animation: slideIn var(--switch-transition-duration) forwards;
 
 }
 
 //On click on product card. The cart will slide away and the payment will slide in.
 .add-product-form {
-
   display: flex;
   flex-direction: column;
   width: 90%;
   margin: 20px auto;
   padding: 20px;
-  border: 1px solid gray;
-  border-radius: 30px;
+  border: 1px solid #B6CAC0;
+  border-radius: 15px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
-  animation: slideUp 0.5s forwards;
+  animation: slideUp var(--switch-transition-duration) forwards;
 
+  .add-product-title-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+
+    .add-product-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #2C7A51;
+      margin-bottom: 10px;
+    }
+
+    .add-product-title-underline {
+      width: 50px;
+      height: 2px;
+      background-color: #2C7A51;
+    }
+  }
+
+  .form-line {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+
+    &.images {
+      align-items: center;
+    }
+
+    label {
+      flex: 1;
+      margin-right: 10px;
+      color: #0F2319;
+    }
+
+    input,
+    button {
+      flex: 2;
+    }
+  }
+
+  .images-label {
+    display: flex;
+    align-items: center;
+    color: #0F2319;
+  }
+
+  .add-product-button {
+    background-color: #2C7A51;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: #1e5633;
+    }
+  }
 }
 
 .state-slide-in {
-  animation: slideIn 0.5s forwards;
+  animation: slideIn var(--switch-transition-duration) forwards;
 }
 
 .state-slide-out {
-  animation: slideOut 0.5s forwards;
+  animation: slideOut var(--switch-transition-duration) forwards;
 }
 
 .state-slide-up {
-  animation: slideUp 0.5s forwards;
+  animation: slideUp var(--switch-transition-duration) forwards;
 }
 
 .state-slide-down {
-  animation: slideDown 0.5s forwards;
+  animation: slideDown var(--switch-transition-duration) forwards;
+}
+
+
+
+@keyframes slideDownTxt {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
 }
 
 @keyframes slideIn {

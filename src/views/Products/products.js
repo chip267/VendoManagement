@@ -67,7 +67,8 @@ const Products = () => {
   //On press add product button. Hide the cart section and show the add product 
   const [isAddProduct, setIsAddProduct] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const keyToAnimate = "keyToAnimate"
+  //Currently unused
+  const btnTextAnimateClassName = isTransitioning ? cx("state-slide-down-txt") : "";
   //Use api on first render and when page change
   useEffect(() => {
     fetchProducts();
@@ -75,7 +76,9 @@ const Products = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await ProductApiController.getProducts(pageIndex, maxItemPerPage);
+      const response = await ProductApiController.getProducts({ page: pageIndex, limit: maxItemPerPage });
+      console.log("page index: " + pageIndex);
+
       const results = response.data.results;
       totalCounts = response.data.totalDocuments;
       setStoreProducts(results);
@@ -86,7 +89,45 @@ const Products = () => {
     }
   };
 
-
+  const addProduct = async ({
+    productName,
+    type,
+    brand,
+    manufacturer,
+    countryOrigin,
+    sellPrice,
+    importPrice,
+    quantity = 0,
+    images,
+  }) => {
+    try {
+      //If any is null/undefined, return, except imgs
+      if (!productName || !type || !brand || !manufacturer || !countryOrigin || !sellPrice || !importPrice || !quantity) {
+        console.log("Missing field");
+        return;
+      }
+      //Multipart form. Apppend each
+      const formData = new FormData();
+      formData.append("productName", productName);
+      formData.append("type", type);
+      formData.append("brand", brand);
+      formData.append("manufacturer", manufacturer);
+      formData.append("countryOrigin", countryOrigin);
+      formData.append("sellPrice", sellPrice);
+      formData.append("importPrice", importPrice);
+      formData.append("quantity", quantity);
+      for (let i = 0; i < images.length; i++) {
+        formData.append("images", images[i]);
+      }
+      const response = await ProductApiController.addProduct(formData);
+      if (response.status === 200) {
+        console.log("Add product successfully");
+      }
+      return response;
+    } catch (error) {
+      return error;
+    }
+  };
 
   // Define a function that handles the change of the selected option
   const handleChange = (option) => {
@@ -153,8 +194,11 @@ const Products = () => {
             <input className={cx("search-bar")} type="text number" placeholder="Search" />
           </span>
           <span>
-            <button className={cx("btn-add")} onClick={switchCartAndAddProduct}>
-              + Add product
+            <button className={cx("btn-add")}
+              onClick={switchCartAndAddProduct}>
+              <div className={btnTextAnimateClassName}>
+                {isAddProduct ? "Order" : "Add product"}
+              </div>
             </button>
           </span>
         </span>
@@ -219,7 +263,7 @@ const Products = () => {
             />
           ) : (
             <AddProductForm
-              addProductHandler={switchCartAndAddProduct}
+              addProductHandler={addProduct}
               addtionalContainerClassName={cx({
                 [cx("state-slide-down")]: isTransitioning,
               })}
