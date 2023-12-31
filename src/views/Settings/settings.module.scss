@@ -1,0 +1,39 @@
+.settings-container {
+    font-family: 'Lexend', sans-serif;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.settings-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    display: block;
+    color: #0F2319;
+    //Lexend font
+
+}
+
+.settings-info {
+    //Container
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 1rem;
+
+}
+
+.logout-btn {
+    //Container  
+    width: 20%;
+    max-width: 10rem;
+    margin-left: 1rem;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+    //Opposite red
+    background-color: #E63946;
+    //Red
+    color: #F1FAEE;
+
+}
