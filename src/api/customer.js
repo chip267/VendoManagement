@@ -5,13 +5,17 @@ class CustomerController {
     async getCustomers(
         {
             page = 1,
-            limit = 10 }
+            limit = 10,
+            name = null,
+            phoneNumber = null
+
+        }
     ) {
         try {
             const response = await apiInstance.get("/api/customers",
                 {
                     withCredentials: true,
-                    params: { page, limit }
+                    params: { page, limit, name, phoneNumber }
                 }
             );
             if (response.status === 200) {
