@@ -18,7 +18,7 @@ const Product = ({ productData, onClick }) => {
                 <div className={cx("productManufacturer")}> {productData.manufacturer}</div>
                 <div className={cx("productCountryOrigin")}> {productData.countryOrigin}</div>
                 <div className={cx("productImportPrice")}> {productData.importPrice}</div>
-                <div className={cx("productImages")}> {productData.images ? productData.images.map((image) => <img src={image.url} alt="product" className={cx("productImage")} />) : ""}</div>
+                <div className={cx("productImages")}> {productData.images ? <img src={productData.images[0].url} alt="product" /> : ""}</div>
 
             </div>
         </div>

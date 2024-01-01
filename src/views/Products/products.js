@@ -9,6 +9,7 @@ import AddProductForm from "./components/addProductForm";
 import { Pagination } from "@mui/material";
 import { useEffect } from "react";
 import { IMG_Logo } from "../../assets/images";
+import ObjectID from "bson-objectid";
 const cx = classNames.bind(styles);
 const imgUrlTest = IMG_Logo
 const maxItemPerPage = 6;
@@ -41,10 +42,10 @@ const taxRate = 0.03;
 //Each time a page change happens, we will update store products by calling api.
 //Get total counts of products from api
 async function initStoreProducts() {
-  const response = await ProductApiController.getProducts(1, maxItemPerPage);
+  const response = await ProductApiController.getProducts({ page: 1, limit: maxItemPerPage });
   const results = response.data.results;
   totalCounts = response.data.totalDocuments;
-  console.log(response);
+  console.log("Init store products: ", results);
   return results;
 }
 
@@ -77,9 +78,8 @@ const Products = () => {
     try {
       setLoading(true);
       const response = await ProductApiController.getProducts({ page: pageIndex, limit: maxItemPerPage });
-      console.log("page index: " + pageIndex);
-
       const results = response.data.results;
+      //Test convert id to object id
       totalCounts = response.data.totalDocuments;
       setStoreProducts(results);
     } catch (error) {
