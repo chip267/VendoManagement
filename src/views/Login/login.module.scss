@@ -1,3 +1,19 @@
-.mainTitle{
-    @apply text-center text-[31px] font-[Lexend] font-medium text-green_main mt-[75px] 
+.mainTitle {
+    @apply text-center text-[31px] font-[Lexend] font-medium text-green_main mt-[75px]
+}
+
+.error-box {
+    display: block;
+    margin: 0 auto;
+    //"text-center text-[12px] font-[Lexend] font-medium text-red-500 mt-[10px]">
+    text-align: center;
+    font-size: 12px;
+    font-family: Lexend;
+    font-weight: 500;
+    color: #EF4444;
+    margin-top: 10px;
+    //red lighter background
+    background-color: #FEE2E2;
+    border-radius: 10px;
+    padding: 10px;
 }

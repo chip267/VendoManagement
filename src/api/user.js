@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 
 import apiInstance from ".";
 //UserController has user that is in sync with user context
@@ -44,8 +43,16 @@ class UserController {
             const response = await apiInstance.post("/api/logout", {}, { withCredentials: true });
             if (response.status === 200) {
                 this.user = null;
+                return {
+                    success: true,
+                    data: null
+                };
+
             }
-            return response;
+            return {
+                success: false,
+                data: null
+            };
 
         } catch (error) {
             return error;
