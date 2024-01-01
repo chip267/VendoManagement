@@ -16,6 +16,11 @@ export const UserProvider = ({ children }) => {
             console.log("Context: No user logged in. Attempting to load user");
             loadUser();
         }
+        //If user in context is null but user in api controller is not null
+        else if (!user && UserApiController.user) {
+            console.log("Context: User loaded from api controller");
+            setUser(UserApiController.user);
+        }
     }, [user]);
 
     async function loadUser() {
