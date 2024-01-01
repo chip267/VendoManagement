@@ -5,7 +5,6 @@ import Customers from "../Customers/customers";
 import { IMG_Logo } from "../../assets/images";
 import { IC_Home } from "../../assets/icons";
 import Sales from "../Sales/sales";
-import Message from "../Message/message";
 import Settings from "../Settings/settings";
 
 const tabNames = [
@@ -13,16 +12,13 @@ const tabNames = [
   "Products",
   "Customers",
   "Sales",
-  "Message",
   "Settings",
 ];
-
 const tabs = [
   <Dashboard />,
   <Products />,
   <Customers />,
   <Sales />,
-  <Message />,
   <Settings />,
 ];
 function Sidebar() {
