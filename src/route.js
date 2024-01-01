@@ -5,7 +5,7 @@ import Login from "./views/Login/login";
 import BasePage from "./views/Base/basePage";
 import { UserApiController } from "./api/user";
 import { redirect } from "react-router-dom";
-
+import { Navigate } from "react-router-dom";
 const router = createBrowserRouter(
     [
         {
@@ -16,21 +16,27 @@ const router = createBrowserRouter(
                     {
                         path: ROUTE_CONSTANT.AUTH.LOGIN,
                         element: <Login />,
-                        // loader: () => redirectHome(),
+                        // send to home if logged in
+                        loader: () => toHome(),
+
 
                     },
                     {
                         path: ROUTE_CONSTANT.HOME,
                         element: <Sidebar />,
                         //Remove to undo login requirement
-                        loader: () => requireLogin(ROUTE_CONSTANT.HOME),
+                        loader: () => requireLogin(),
+                    },
+                    //Any other routes here
+                    {
+                        path: "*",
+                        element: <Navigate to={ROUTE_CONSTANT.HOME} />,
                     }
                 ]
         },
     ]
 );
-
-async function requireLogin(path) {
+async function requireLogin() {
     // Check if user is logged in
     const response = await UserApiController.getCurrentUser();
     const user = response.user;
@@ -42,8 +48,7 @@ async function requireLogin(path) {
     else
         return null;
 }
-
-async function redirectHome() {
+async function toHome() {
     // Check if user is logged in
     const response = await UserApiController.getCurrentUser();
     const user = response.user;
@@ -53,6 +58,7 @@ async function redirectHome() {
         return redirect(ROUTE_CONSTANT.HOME);
     }
     else
-        return redirect(ROUTE_CONSTANT.AUTH.LOGIN);
+        return null;
 }
+
 export default router;
