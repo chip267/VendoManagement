@@ -10,22 +10,25 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/material": "^5.14.20",
+    "@radix-ui/react-alert-dialog": "^1.0.5",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.6.2",
+    "bson-objectid": "^2.0.4",
     "classnames": "^2.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-paginate": "^8.2.0",
-    "react-router-dom": "^6.20.0",
+    "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
     "sass": "^1.69.5",
-
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:https": "cross-env HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -51,6 +54,7 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.5.1",
     "autoprefixer": "^10.4.16",
+    "cross-env": "^7.0.3",
     "postcss": "^8.4.31",
     "sass": "^1.69.5",
     "tailwindcss": "^3.3.5"
