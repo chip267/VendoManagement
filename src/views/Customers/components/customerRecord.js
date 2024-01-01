@@ -4,21 +4,66 @@ import classNames from "classnames/bind";
 const cx = classNames.bind(styles);
 
 const CustomerRecord = ({ customer, id }) => {
+    //Number slicer to add a dot after every 3 digits from right to left
+    const numberSlicer = (number) => {
+        let num = number.toString();
+        let result = "";
+        let count = 0;
+        for (let i = num.length - 1; i >= 0; i--) {
+            result = num[i] + result;
+            count++;
+            if (count % 3 === 0 && i !== 0) {
+                result = "," + result;
+            }
+        }
+        return result;
+    }
+    //Determined using total value bought
+    //If above 2 million, gold
+    //If above 1 million, silver
+    //If below 1 million, bronze
+    const memershipColor = (totalValueBought) => {
+
+        if (totalValueBought >= 2000000) {
+            return "membership-gold";
+        }
+        else if (totalValueBought >= 1000000) {
+            return "membership-silver";
+        }
+        else {
+            return "membership-bronze";
+        }
+    }
+    const typeOfMembership = (totalValueBought) => {
+        if (totalValueBought >= 2000000) {
+            return "Gold";
+        }
+        else if (totalValueBought >= 1000000) {
+            return "Silver";
+        }
+        else {
+            return "Bronze";
+        }
+    }
     return (
         <tr className={cx("data")} key={id}>
             <td><input className={cx("checkmark")} type="checkbox" /></td>
             <td className={cx("people")}>
-                <img className={cx("avatar")} src={customer.avatar} alt="Mô tả hình ảnh" />
                 <div className={cx("people-de")}>{customer.name}</div>
             </td>
-            <td>{customer.code}</td>
-            <td>{customer.bought}</td>
-            <td className={cx("type")}>{customer.type}</td>
-            <td className={cx("membership-gold")}>
-                <div className={cx("mem-gold")}>{customer.membership}</div>
+            <td>{customer.phoneNumber ? customer.phoneNumber : "N/A"}</td>
+            <td>{customer.totalValueBought ? numberSlicer(customer.totalValueBought) + " vnd" : "N/A"}</td>
+            <td className={cx("type")}>{customer.type ? customer.type : "Member"}</td>
+            <td className={cx("membership")}>
+                <div className={cx(memershipColor(customer.totalValueBought))}>
+                    {customer.totalValueBought ? typeOfMembership(customer.totalValueBought) : "N/A"}
+                </div>
+
             </td>
 
-            <td>Oct 03, 2021</td>
+            <td>
+                <div className={cx("latest-order")}>{customer.latestOrderDate ? customer.latestOrderDate : "N/A"}</div>
+            </td>
             <td className={cx("delete")}>
                 <button className={cx("btn-delete")}>
                     <svg xmlns="http://www.w3.org/2000/svg" height="10" width="10" viewBox="0 0 384 512">

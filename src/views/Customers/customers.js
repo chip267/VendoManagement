@@ -5,65 +5,56 @@ import "@fontsource/lexend";
 import { IMG_Logo } from "../../assets/images";
 import SortLabel from "./components/sortLabel";
 import { useEffect } from "react";
-import { Pagination } from "@mui/material";
-
+import { List, Pagination } from "@mui/material";
 import CustomerRecord from "./components/customerRecord";
+import ListWithLoading from "../GeneralComponents/ListWithLoading";
+import CustomerApiController from "../../api/customer";
 //import images from "../../assets/images";
 const testUrl = IMG_Logo;
 const cx = classNames.bind(styles);
-const maxItemsPerPage = 3
+const maxItemsPerPage = 3;
+const defaultPage = 1;
+let totalCounts = 0;
+async function initCustomers() {
+  const response = await CustomerApiController.getCustomers({ page: defaultPage, limit: maxItemsPerPage });
+  if (response.success) {
+    let results = response.data.results;
+    totalCounts = response.data.totalDocuments;
+    console.log("Init customers: ", results);
+    return results;
+  }
+  return [];
+}
 function Customers() {
+
   const [pageIndex, setPageIndex] = useState(0);
-  const [slicedCustomers, setSlicedCustomers] = useState([]);
-  //API data here
-  const [customers, setCustomers] = useState([
-    {
-      id: 1,
-      name: "Nguyen Van A",
-      code: "#KGA57",
-      bought: 67,
-      type: "Member",
-      membership: "Gold",
-      latestOrder: "Oct 03, 2021",
-    },
-    {
-      id: 2,
-      name: "Nguyen Van B",
-      code: "#KGA57",
-      bought: 67,
-      type: "Member",
-      membership: "Gold",
-      latestOrder: "Oct 03, 2021",
-    },
-    {
-      id: 3,
-      name: "Nguyen Van C",
-      code: "#KGA57",
-      bought: 67,
-      type: "Member",
-      membership: "Gold",
-      latestOrder: "Oct 03, 2021",
-    },
-    {
-      id: 3,
-      name: "Nguyen Van C",
-      code: "#KGA57",
-      bought: 67,
-      type: "Member",
-      membership: "Gold",
-      latestOrder: "Oct 03, 2021",
-    },
-  ]);
-  const onPageChange = (page) => {
-    setPageIndex(page - 1);
-  };
+  const [isLoading, setIsLoading] = useState(false);
+  const [customers, setCustomers] = useState([]);
+  const fetchCustomers = async (page = defaultPage, limit = maxItemsPerPage) => {
+    try {
+      setIsLoading(true);
+      const response = await CustomerApiController.getCustomers({ page: page + 1, limit: limit });
+      if (response.success) {
+        setCustomers(response.data.results);
+        totalCounts = response.data.totalDocuments;
+        console.log("Fetch customers: ", response.data.results);
+        console.log("Total counts: ", totalCounts);
+      }
+      else {
+        console.log("Fetch customers failed");
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+    finally {
+      setIsLoading(false);
+    }
+
+  }
   useEffect(() => {
-    const start = pageIndex * maxItemsPerPage;
-    const end = start + maxItemsPerPage;
-    setSlicedCustomers(customers.slice(start, end));
-    console.log("Slice customers: ", slicedCustomers);
-    console.log("Page: ", pageIndex);
-  }, [pageIndex, customers]);
+    fetchCustomers(pageIndex, maxItemsPerPage);
+  }, [pageIndex]);
   return (
     <div className={cx("container")}>
       <div className={cx("header")}>
@@ -102,50 +93,68 @@ function Customers() {
                 label="Name"
                 onClick={() => console.log("Sort by name")}
                 sortValue="name"
+
               />
               <SortLabel
-                label="Customer Code"
-                onClick={() => console.log("Sort by customer code")}
+                label="Phone Number"
+                onClick={() => console.log("Sort by phone number")}
                 sortValue="code"
+
               />
               <SortLabel
                 label="Bought"
                 onClick={() => console.log("Sort by bought")}
                 sortValue="bought"
+
               />
               <SortLabel
                 label="Type"
                 onClick={() => console.log("Sort by type")}
                 sortValue="type"
+
               />
 
               <SortLabel
                 label="Membership"
                 onClick={() => console.log("Sort by membership")}
                 sortValue="membership"
+
               />
               <SortLabel
                 label="Latest Order"
                 onClick={() => console.log("Sort by latest order")}
                 sortValue="latestOrder"
+
+
+              />
+
+              <SortLabel
+                label="Action"
+                onClick={() => console.log("Sort by action")}
+                sortValue="action"
+
+                button="none"
               />
             </tr>
           </thead>
           <tbody>
-            {slicedCustomers.map((customer) => (
-              customer.avatar = testUrl,
-              <CustomerRecord
-                key={customer.id}
-                customer={customer}
-              />
-            ))}
+            <ListWithLoading
+              isLoading={isLoading}
+              data={customers}
+              renderItem={(customer, index) => (
+                <CustomerRecord
+                  customer={customer}
+                  id={index}
+                />
+              )}
+            />
           </tbody>
         </table>
       </div>
       <Pagination
         className={cx("pagination")}
-        count={Math.ceil(customers.length / maxItemsPerPage)}
-        onChange={(event, page) => onPageChange(page)}
+        count={Math.ceil(totalCounts / maxItemsPerPage)}
+        onChange={(event, page) => setPageIndex(page - 1)}
         variant="outlined"
         shape="rounded"
         //#EBFAED
