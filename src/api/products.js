@@ -13,7 +13,7 @@ class ProductController {
         sellPriceFilter = null,
     }) {
         try {
-            const response = await apiInstance.get("/api/products?page=" + page + "&limit=" + limit, { withCredentials: true });
+            const response = await apiInstance.get("/api/products", { withCredentials: true, params: { page, limit, nameFilter, typeFilter, sellPriceFilter } });
             if (response.status === 200) {
                 return {
                     success: true,
@@ -21,6 +21,7 @@ class ProductController {
                 };
             }
             else {
+                console.log(response);
                 return {
                     success: false,
                     data: null
@@ -51,8 +52,6 @@ class ProductController {
     }
     async addProduct(product) {
         try {
-            //Check if product is valid
-
             const response = await apiInstance.post("/api/products", product, { withCredentials: true });
             return response;
         } catch (error) {
