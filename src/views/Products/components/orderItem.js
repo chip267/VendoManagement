@@ -3,14 +3,16 @@ import classNames from "classnames/bind";
 
 const cx = classNames.bind(styles);
 const OrderItem = ({ itemData, index, updateQuantity }) => {
+    const productData = itemData.product;
+    const associatedQuantity = itemData.quantity;
     return (
-        <div key={index} className={styles.item}>
-            <input type="checkbox" className={styles.checkbox} />
-            <img src={itemData.image} className={styles.image} alt="Product" />
-            <div className={cx("detail")}>
-                <div className={styles.name}>{itemData.name}</div>
-                <div className={cx("capacity")}>{itemData.capacity}</div>
-                <div className={styles.price}>{itemData.price.toLocaleString()}</div>
+        <div key={productData._id}
+            className={styles.item} id={productData._id}>
+
+            <img src={productData.images ? productData.images[0].url : ""} alt="product" className={styles.image} />
+            <div className={cx("order-item-detail")}>
+                <div className={styles.name}>{productData.productName}</div>
+                <div className={styles.price}>{productData.sellPrice} vnd</div>
             </div>
             <div className={styles.quantity}>
                 <button
@@ -19,7 +21,7 @@ const OrderItem = ({ itemData, index, updateQuantity }) => {
                 >
                     -
                 </button>
-                <p>{itemData.quantity}</p>
+                <p>{associatedQuantity}</p>
                 <button
                     className={styles.increment}
                     onClick={() => updateQuantity(index, 1)}

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import classNames from "classnames/bind";
 import styles from "../products.module.scss";
+import { useEffect } from "react";
 const cx = classNames.bind(styles);
 const AddProductForm = ({ addProductHandler, key, addtionalContainerClassName }) => {
     // Info include: productName, type, brand, manufacturer, countryOrigin, sellPrice, importPrice, quantity, images
@@ -14,7 +15,40 @@ const AddProductForm = ({ addProductHandler, key, addtionalContainerClassName })
     const [importPrice, setImportPrice] = useState(0);
     const [quantity, setQuantity] = useState(0);
     const [images, setImages] = useState([]);
+    const [mainImage, setMainImage] = useState(null); // image[0]
+    const [otherImages, setOtherImages] = useState([]); // image[1-]
+    const [fileError, setFileError] = useState(false);
+    const handleImageChange = ({ e, isMainImage = false }) => {
+        // Other image cant be over 4. Total out at 5 including main image
+        if (!isMainImage) {
+            if (e.target.files.length > 4) {
+                setFileError(true);
+                setOtherImages([]);
+                return;
+            }
+            else {
+                setOtherImages([...e.target.files]);//[...e.target.files
+                setFileError(false);
+            }
+        }
+        else {
+            if (e.target.files.length > 0) {
+                setMainImage(e.target.files[0]);
+            }
+            else {
+                setMainImage(null);
+            }
+        }
+    };
+    useEffect(() => {
+        if (mainImage) {
+            setImages([mainImage, ...otherImages]);
+        }
+        else {
+            setImages([...otherImages]);
+        }
 
+    }, [mainImage, otherImages]);
     return (
         <div className={cx("add-product-form") + " " + addtionalContainerClassName} key={key}>
             <div className={cx("add-product-title-container")}>
@@ -57,13 +91,37 @@ const AddProductForm = ({ addProductHandler, key, addtionalContainerClassName })
                 <label htmlFor="quantity">Quantity</label>
                 <input type="number" id="quantity" onChange={(e) => setQuantity(e.target.value)} />
             </div>
-            <div className={cx("form-line", "images")}>
-                <label htmlFor="images">Images</label>
+            <div className={cx("form-line", "main-image")}>
+                <label htmlFor="images">Display image:</label>
                 <input
                     accept=".jpg, .jpeg, .png"
                     type="file"
                     id="images"
-                    onChange={(e) => setImages(e.target.files)} />
+                    onChange={(e) => handleImageChange({ e: e, isMainImage: true })}
+                />
+            </div>
+            <div className={cx("form-line", "images-preview")}>
+                {mainImage && <div className={cx("image-preview-container")}>
+                    <img src={URL.createObjectURL(mainImage)} alt="product" className={cx("image")} />
+                </div>}
+            </div>
+            <div className={cx("form-line", "other-images")}>
+                <label htmlFor="images">Other images:</label>
+                <input
+                    accept=".jpg, .jpeg, .png"
+                    type="file"
+                    multiple
+                    id="images"
+                    onChange={(e) => handleImageChange({ e: e, isMainImage: false })}
+                />
+            </div>
+            <div className={cx("form-line", "images-preview-container")}>
+                {otherImages.length > 0 && otherImages.map((image, index) => (
+                    <div className={cx("image-preview-container")} key={index}>
+                        <img src={URL.createObjectURL(image)} alt="product" className={cx("image")} />
+                    </div>
+                ))}
+                {fileError && <div className={cx("file-error")}>You can only upload up to 4 images</div>}
             </div>
             <button className={cx("add-product-button")} onClick={() => addProductHandler({
                 productName,
@@ -78,7 +136,7 @@ const AddProductForm = ({ addProductHandler, key, addtionalContainerClassName })
             })}>
                 Add product
             </button>
-        </div>
+        </div >
     );
 }
 export default AddProductForm;

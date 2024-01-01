@@ -9,9 +9,10 @@
 
 .header {
   margin-top: 25px;
-  font-size: 20px;
+  font-size: 24px;
   line-height: 20px;
   font-weight: 500;
+
   color: #0F2319;
 }
 
@@ -213,6 +214,8 @@
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
   }
 
+
+
 }
 
 .productDetail {
@@ -317,6 +320,60 @@
     }
   }
 
+  .images-preview {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+
+    //For main image
+    .main-image-preview-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #B6CAC0;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 20%;
+      height: 100px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    //For other images
+    .image-preview-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #B6CAC0;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 20%;
+      height: 100px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+
+
+    .image-preview-container:hover {
+      cursor: pointer;
+    }
+  }
+
+
   .form-line {
     width: 100%;
     display: flex;
@@ -360,6 +417,13 @@
   }
 }
 
+.file-error {
+  width: 100%;
+  color: red;
+  font-size: 1 rem;
+  text-align: center;
+}
+
 .state-slide-in {
   animation: slideIn var(--switch-transition-duration) forwards;
 }
@@ -376,7 +440,10 @@
   animation: slideDown var(--switch-transition-duration) forwards;
 }
 
-
+.customer-search-bar {
+  width: 100%;
+  margin-top: 20px;
+}
 
 @keyframes slideDownTxt {
   0% {
@@ -436,14 +503,14 @@
   align-items: center;
   justify-content: space-between;
   color: #0F2319;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   line-height: 17px;
 }
 
 .clear {
   padding: 10px;
-  font-size: 12px;
+  font-size: 18px;
   color: #B6CAC0;
   //background-color: red;
   border: none;
@@ -476,36 +543,46 @@
 }
 
 .image {
-  width: 50px;
+  width: 10%;
   height: 66px;
   object-fit: cover;
 }
 
-.capacity {
-  display: block;
-  font-size: 8px;
-  font-weight: bold;
-  color: #B6CAC0;
-}
+
 
 .name {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: bold;
   color: #0F2319;
 }
 
 .price {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   color: #FABC50;
 }
 
 .quantity {
+  width: 30%;
   display: flex;
   align-items: center;
+  justify-content: space-evenly;
   gap: 8px;
+}
+
+.order-item-detail {
+  width: 20%;
+  padding-left: 20px;
+
+  .btn-detail {
+    &:hover {
+      path {
+        fill: #0CE622;
+      }
+    }
+  }
 }
 
 .decrement,
@@ -525,18 +602,26 @@
   display: flex;
   flex-direction: column;
   //align-items: flex-start;
-  gap: 10px;
+  padding: 10px;
+
 
   .subtotal,
-  .tax,
-  .discount,
-  .shipping {
+  .tax {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     font-weight: 400;
-    font-size: 11px;
+    font-size: 12px;
+
     color: #B6CAC0;
+  }
+
+  .tax {
+    margin-top: 10px;
+  }
+
+  .subtotal {
+    margin-top: 20px;
   }
 }
 
@@ -547,7 +632,8 @@
   flex-direction: row;
   justify-content: space-between;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 18px;
+  margin-top: 10px;
   color: #0F2319;
 }
 

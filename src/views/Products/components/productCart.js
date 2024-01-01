@@ -4,8 +4,17 @@ import styles from '../products.module.scss';
 import OrderItem from './orderItem';
 import OrderInformation from './orderInformation';
 import classNames from 'classnames/bind';
+import CustomerSearchbar from './customerSearchbar';
 const cx = classNames.bind(styles);
-function ProductCart({ clearOrder, orderItems, updateQuantity, taxRate = 0.03, key, addtionalContainerClassName }) {
+
+function ProductCart({ clearOrder, orderItems, updateQuantity, taxRate = 0.03, key, addtionalContainerClassName, onSubmit = null, setOrderCustomer = null }) {
+    const SubmitButton = (onPress) => {
+        return (
+            <div className={cx("btn-payment")} onClick={onPress}>
+                <button className={cx("btn")}>Payment</button>
+            </div>
+        );
+    }
     return (<div className={styles.payment + " " + addtionalContainerClassName} key={key}>
         <div className={styles.heading}>
             <h1>Customer Order</h1>
@@ -14,9 +23,15 @@ function ProductCart({ clearOrder, orderItems, updateQuantity, taxRate = 0.03, k
             </button>
         </div>
         <div className={styles.items}>
-            {orderItems.map((item, index) => <OrderItem key={index} itemData={item} index={index} updateQuantity={updateQuantity} />)}
+            {orderItems.map((item, index) => <OrderItem index={index} key={index}
+                itemData={item}
+                updateQuantity={updateQuantity}
+            />)}
         </div>
-        <OrderInformation items={orderItems} taxRate={taxRate} />
+        <div className={cx("customer-search-bar")}>
+            <CustomerSearchbar setOrderCustomer={setOrderCustomer} />
+        </div>
+        <OrderInformation items={orderItems} taxRate={taxRate} submitButton={SubmitButton(onSubmit)} />
     </div>);
 }
 export default ProductCart;

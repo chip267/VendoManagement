@@ -61,7 +61,20 @@ class OrderController {
     async addOrder(order) {
         try {
             const response = await apiInstance.post("/api/orders", order, { withCredentials: true });
-            return response;
+            if (response.status === 200) {
+                return {
+                    success: true,
+                    data: response.data
+                };
+            }
+            else {
+                console.log("API Order: Add order failed. Error: " + response.data);
+                return {
+
+                    success: false,
+                    data: null
+                };
+            }
         } catch (error) {
             return error;
         }

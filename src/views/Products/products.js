@@ -9,7 +9,10 @@ import AddProductForm from "./components/addProductForm";
 import { Pagination } from "@mui/material";
 import { useEffect } from "react";
 import { IMG_Logo } from "../../assets/images";
+import OrderApiController from "../../api/order";
 import ObjectID from "bson-objectid";
+import { UserApiController } from "../../api/user";
+import { CircularProgress } from "@mui/material";
 const cx = classNames.bind(styles);
 const imgUrlTest = IMG_Logo
 const maxItemPerPage = 6;
@@ -22,20 +25,6 @@ const options = [
   { value: "ram", label: "Ram" },
   { value: "rom", label: "Rom" },
 ];
-const cartItems = [
-  {
-    name: "Western Digital Elements",
-    image: imgUrlTest,
-    price: 1290000,
-    quantity: 2,
-  },
-  {
-    name: "Western Digital Elements",
-    image: imgUrlTest,
-    price: 1290000,
-    quantity: 2,
-  }
-];
 const taxRate = 0.03;
 //Store products will include current page products, next page number and previous page number.
 //And total counts of products.
@@ -45,26 +34,23 @@ async function initStoreProducts() {
   const response = await ProductApiController.getProducts({ page: 1, limit: maxItemPerPage });
   const results = response.data.results;
   totalCounts = response.data.totalDocuments;
-  console.log("Init store products: ", results);
   return results;
-}
-
-
-
-
-//As array
-function initCartItems() {
-  return cartItems;
 }
 const transitionTime = 500;
 
 const Products = () => {
-  // Use a state variable to store the current selected option
+  // Option for the type bar.
   const [selectedOption, setSelectedOption] = useState('null');
+
+
+  //For order
+  const [isOrdering, setIsOrdering] = useState(false);
+  const [orderCustomerId, setOrderCustomerId] = useState(null);
+  //For product
   const [loading, setLoading] = useState(false);
   const [storeProducts, setStoreProducts] = useState(() => initStoreProducts());
   const [pageIndex, setPageIndex] = useState(1);
-  const [orderItems, setOrderItems] = useState(() => initCartItems());
+  const [orderItems, setOrderItems] = useState([]);
   //On press add product button. Hide the cart section and show the add product 
   const [isAddProduct, setIsAddProduct] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -88,7 +74,7 @@ const Products = () => {
       setLoading(false);
     }
   };
-
+  //Add to db.
   const addProduct = async ({
     productName,
     type,
@@ -128,53 +114,46 @@ const Products = () => {
       return error;
     }
   };
-
-  // Define a function that handles the change of the selected option
-  const handleChange = (option) => {
-    setSelectedOption(option);
-  };
-  // Define a function that updates the quantity of an item
+  //Used to update quantity to current cart
   const updateQuantity = (index, increment) => {
     // Make a copy of the order items array
     let newItems = [...orderItems];
     // Only decrement if the quantity is greater than 0
-    if (increment < 0 && newItems[index].quantity <= 0) {
+    if (newItems[index].quantity === 0 && increment === -1) {
       return;
     }
-    // Update the quantity of the item at the given index
+    // If the quantity is 0 and the increment is -1, remove the item from the array
+    if (newItems[index].quantity === 0 && increment === -1) {
+      newItems.splice(index, 1);
+    }
+    // Otherwise, update the quantity of the item
     newItems[index].quantity += increment;
+    console.log("New items: ", newItems);
     // Set the new items array as the state
     setOrderItems(newItems);
   };
-
-  // Define a function that calculates the subtotal of the order
-  const getSubtotal = () => {
-    // Initialize the subtotal as zero
-    let subtotal = 0;
-    // Loop through the order items and add the product of price and quantity to the subtotal
-    for (let item of orderItems) {
-      subtotal += item.price * item.quantity;
-    }
-    // Return the subtotal
-    return subtotal;
-  };
-  // Define a function that calculates the tax of the order
-  const getTax = () => {
-    // Return the product of the subtotal and the tax rate
-    return getSubtotal() * taxRate;
-  };
-  // Define a function that calculates the total of the order
-  const getTotal = () => {
-    // Return the sum of the subtotal and the tax
-    return getSubtotal() + getTax();
-  };
-
-  // Define a function that clears the order
   const clearOrder = () => {
-    // Set the order items array as an empty array
     setOrderItems([]);
+    setOrderCustomerId(null);
   };
-  //************************************ */
+  //Add to cart function
+  const addToCart = (product) => {
+    // Make a copy of the order items array
+    let newItems = [...orderItems];
+    // Check if the product is already in the cart
+    const index = newItems.findIndex((item) => item.product._id === product._id);
+    // If the product is not in the cart
+    if (index === -1) {
+      // Add the product to the cart with a quantity of 1
+      newItems.push({ product: product, quantity: 1 });
+    } else {
+      // Otherwise, increment the quantity of the product in the cart
+      newItems[index].quantity++;
+    }
+    // Set the new items array as the state
+    setOrderItems(newItems);
+
+  }
   //Switch between cart and add product
   function switchCartAndAddProduct() {
     setIsTransitioning(true);
@@ -183,6 +162,51 @@ const Products = () => {
       setIsTransitioning(false);
     }, transitionTime);
   }
+  //Make order function
+  async function makeOrder() {
+    try {
+      setIsOrdering(true);
+      //An array that contains [ {productId, quantity}, {productId, quantity}, ...]
+      //Json format
+      let order = {};
+      const orderDetails = [];
+      orderItems.forEach((item) => {
+        orderDetails.push({ productId: item.product._id, quantity: item.quantity });
+      });
+      if (orderCustomerId === null) {
+        console.log("Missing field customerId");
+        return;
+      }
+      if (orderDetails.length === 0) {
+        console.log("Order is empty");
+        return;
+      }
+      order.customerId = orderCustomerId;
+      order.orderDetails = orderDetails;
+      order.employeeId = UserApiController.user.employeeId;
+      //Create order
+      const response = await OrderApiController.addOrder(order);
+      console.log("Response: ", response);
+      if (response.success) {
+        console.log("Make order successfully");
+        clearOrder();
+      }
+      else {
+        console.log("Make order failed");
+
+      }
+      setIsOrdering(false);
+    }
+    catch (error) {
+      console.error("Error making order:", error);
+      setIsOrdering(false);
+    }
+    finally {
+      setIsOrdering(false);
+    }
+  }
+  //************************************ */
+
   return (
     <div className={cx("container")}>
       <div className={cx("header")}>
@@ -219,25 +243,26 @@ const Products = () => {
           </span>
         </span>
       </div>
+      <div className={cx("selectionBar")}>
+        {options.map((option) => (
+          <button
+            key={option.value}
+            onClick={() => setSelectedOption(option)}
+            className={`${cx("selectionItem")} ${option.value === selectedOption.value && selectedOption !== null ? styles.selected : ""
+              }`}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
       <div className={cx("wrapper")}>
         <div className={cx("wrapper-left")}>
-          <div className={cx("selectionBar")}>
-            {options.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => handleChange(option)}
-                className={`${cx("selectionItem")} ${option.value === selectedOption.value && selectedOption !== null ? styles.selected : ""
-                  }`}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
+
           <div className={cx("products")}>
             <ListWithLoading
               isLoading={loading}
               data={storeProducts}
-              renderItem={(item, index) => <Product key={index} productData={item} />}
+              renderItem={(item, index) => <Product key={index} productData={item} onClick={() => addToCart(item)} />}
             />
           </div>
           <Pagination
@@ -252,15 +277,23 @@ const Products = () => {
         </div>
         <div className={cx("wrapper-right")}>
           {!isAddProduct ? (
-            <ProductCart
-              clearOrder={clearOrder}
-              orderItems={orderItems}
-              updateQuantity={updateQuantity}
-              taxRate={taxRate}
-              addtionalContainerClassName={cx({
-                [cx("state-slide-out")]: isTransitioning,
-              })}
-            />
+            <div className={cx("product-cart-container")}>
+              {isOrdering ? (
+                <CircularProgress size={50} thickness={5} className={cx("circular-progress")} />
+              ) : (
+                <ProductCart
+                  clearOrder={clearOrder}
+                  orderItems={orderItems}
+                  updateQuantity={updateQuantity}
+                  taxRate={taxRate}
+                  addtionalContainerClassName={cx({
+                    [cx("state-slide-out")]: isTransitioning,
+                  })}
+                  onSubmit={makeOrder}
+                  setOrderCustomer={setOrderCustomerId}
+                />
+              )}
+            </div>
           ) : (
             <AddProductForm
               addProductHandler={addProduct}

@@ -7,11 +7,11 @@ const cx = classNames.bind(styles);
 //Also has the function to update the quantity of the item and the total price
 //As well as the tax and the subtotal and the button to pay
 
-const OrderInformation = ({ items, taxRate, updateInfo }) => {
+const OrderInformation = ({ items, taxRate, submitButton }) => {
     const getSubtotal = () => {
         let subtotal = 0;
         items.forEach((item) => {
-            subtotal += item.price * item.quantity;
+            subtotal += item.product.sellPrice * item.quantity;
         });
         return subtotal;
     };
@@ -32,25 +32,24 @@ const OrderInformation = ({ items, taxRate, updateInfo }) => {
                     Tax:
                     <label>{getTax().toLocaleString()}</label>
                 </label>
-                <label className={cx("discount")}>
+
+                <label className={cx("total")}>
+                    Total:
+                    <label>{getTotal().toLocaleString()}</label>
+                </label>
+                {submitButton}
+            </div>
+
+        </div>
+
+    );
+}
+{/* <label className={cx("discount")}>
                     Discount:
                     <label></label>
                 </label>
                 <label className={cx("shipping")}>
                     Shipping cost:
                     <label></label>
-                </label>
-                <label className={cx("total")}>
-                    Total:
-                    <label>{getTotal().toLocaleString()}</label>
-                </label>
-            </div>
-            <div className={cx("btn-payment")}>
-                <button className={cx("btn")}>Payment</button>
-            </div>
-        </div>
-
-    );
-}
-
+                </label> */}
 export default OrderInformation;

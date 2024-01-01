@@ -5,7 +5,7 @@ import styles from "../products.module.scss";
 const cx = classNames.bind(styles);
 const Product = ({ productData, onClick }) => {
     return (
-        <div className={cx("product")} key={productData.id} id={productData.id}>
+        <div className={cx("product")} key={productData._id} id={productData._id} onClick={onClick}>
             <img src={productData.images ? productData.images[0].url : ""} alt="product" className={cx("productImage")} onClick={onClick} />
             <div className={cx("productDetail")}>
                 <div className={cx("productName")}> {productData.productName}</div>
