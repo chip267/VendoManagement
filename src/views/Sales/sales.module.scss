@@ -1,22 +1,25 @@
-.container{
-    width: 85vw;
+.container {
+    width: 100%;
     position: relative;
     float: right;
     font-family: "Lexend";
 }
+
 /* Header title */
-.header{
+.header {
     margin-top: 25px;
     font-size: 20px;
     line-height: 20px;
     font-weight: 500;
     color: #0F2319;
 }
-.btn-bar{
-    width: 80vw;
+
+.btn-bar {
+    width: 100%;
     margin-top: 20px;
 }
-.search-bar{
+
+.search-bar {
     padding: 10px;
     width: 217px;
     height: 37px;
@@ -25,107 +28,148 @@
     box-sizing: border-box;
     font-size: 12px;
 }
-.btn-setting{
+
+.btn-setting {
     float: right;
     width: 37px;
     height: 37px;
     background-color: #EBFAED;
     border-radius: 10px;
-    button{
+
+    button {
         align-items: center;
         width: 37px;
         height: 37px;
     }
-    svg{
+
+    svg {
         margin-left: auto;
         margin-right: auto;
     }
 }
-.table-content{
-    width: 75vw;
+
+.table-content {
+    width: 100%;
     margin-top: 20px;
     font-weight: 400;
     line-height: 20px;
-    .name-title{
+
+    .name-title {
         width: 300px;
     }
-    .label{
+
+    .label {
         font-size: 13px;
     }
-    .data{
+
+    .data {
         font-size: 11.5px;
     }
-    .sort-icon{
+
+    .sort-icon {
         margin-left: 6px;
     }
-    .label-status{
+
+    .label-status {
         padding-left: 14px;
     }
-    .status{
-        .status-state{
+
+    .status {
+        .status-completed {
             display: inline-flex;
             color: #0CE622;
             background-color: #EBFAED;
-            padding: 2px 10px ;
+            padding: 2px 10px;
+            border-radius: 10px;
+        }
+
+        .status-pending {
+            display: inline-flex;
+            color: #FFB800;
+            background-color: #FFF7E5;
+            padding: 2px 10px;
+            border-radius: 10px;
+        }
+
+        .status-cancelled {
+            display: inline-flex;
+            color: #FF0000;
+            background-color: #FFE5E5;
+            padding: 2px 10px;
             border-radius: 10px;
         }
     }
-    .detail{
-        padding-left: 20px;
-        .btn-detail{
-            &:hover{
-                path{
-                    fill: #0CE622;
-                }
-            }
-        }
-    }
-  
 }
 
-.table-content tr{
+
+
+.table-content tr {
     border-bottom: 1px solid #F4F9F7;
 }
+
 thead td {
     padding: 10px 20px 20px 0;
     color: #B6CAC0;
 }
-tbody td{
+
+tbody td {
     padding: 20px 0 20px 0;
 }
-.checkmark{
+
+.checkmark {
     width: 17px;
     height: 17px;
     border: 1px solid #E2EFE8;
     border-radius: 4px;
     position: relative;
 }
-table{
-    width: 75vw;
-    border-collapse: collapse;
+
+.checkmark-header {
+    width: 17px;
+    height: 17px;
+    border: 1px solid #E2EFE8;
+    border-radius: 4px;
+    position: relative;
+
+    opacity: 0;
 }
 
 
 
-.table-content tr{
+
+
+.table-content tr {
     border-collapse: collapse;
 }
-.fa-sort{
+
+.fa-sort {
     width: 10.01px;
     height: 17px;
     color: #B6CAC0;
     background-color: white;
 }
-tbody .avatar{
+
+tbody .avatar {
     width: 37px;
     height: 37px;
     align-items: center;
     border-radius: 5px;
     margin-right: 16px;
 }
-.table-content .people{
+
+.table-content .people {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     text-align: start;
+}
+
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+
 }
