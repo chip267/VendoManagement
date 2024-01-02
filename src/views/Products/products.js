@@ -8,13 +8,15 @@ import ListWithLoading from "../GeneralComponents/ListWithLoading";
 import AddProductForm from "./components/addProductForm";
 import { Pagination, Snackbar } from "@mui/material";
 import { useEffect } from "react";
-import { IMG_Logo } from "../../assets/images";
 import OrderApiController from "../../api/order";
 import { UserApiController } from "../../api/user";
 import { CircularProgress } from "@mui/material";
 import { useGlobalSnackbar } from "../Base/basePage";
+import { useGlobalConfirmDialog } from "../Base/componentContext/confirmDialog";
+import DeleteProductButton from "./components/productAction/deleteProductButton";
 const cx = classNames.bind(styles);
-const imgUrlTest = IMG_Logo
+
+//PRODUCT PAGE CONSTANTS:
 const maxItemPerPage = 6;
 let totalCounts = 0;
 // Define the options for the selection bar
@@ -26,6 +28,9 @@ const options = [
   { value: "rom", label: "Rom" },
 ];
 const taxRate = 0.03;
+const transitionTime = 500;
+//#############################################
+
 //Store products will include current page products, next page number and previous page number.
 //And total counts of products.
 //Each time a page change happens, we will update store products by calling api.
@@ -36,32 +41,42 @@ async function initStoreProducts() {
   totalCounts = response.data.totalDocuments;
   return results;
 }
-const transitionTime = 500;
+
 
 const Products = () => {
   // Option for the type bar.
   const [selectedOption, setSelectedOption] = useState('null');
-  //For order
+  //For order section
   const [isOrdering, setIsOrdering] = useState(false);
   const [orderCustomerId, setOrderCustomerId] = useState(null);
   //Used to check if customer buy at store,if yes, set order status to  "Delivered"
   const [orderStatus, setOrderStatus] = useState(null);
-  //For product
+  //For product (left side)
   const [loading, setLoading] = useState(false);
   const [storeProducts, setStoreProducts] = useState(() => initStoreProducts());
   const [pageIndex, setPageIndex] = useState(1);
+  //For cart (right side)
   const [orderItems, setOrderItems] = useState([]);
+  const [isAddingProduct, setIsAddingProduct] = useState(false);
+  //For product action (action bar)
+  const [selectedProduct, setSelectedProduct] = useState(null);
   //On press add product button. Hide the cart section and show the add product 
   const [isAddProduct, setIsAddProduct] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  //Snackbar
+  //Snackbar and other misc
   const { showSnackbar } = useGlobalSnackbar();
+  const { showDialog } = useGlobalConfirmDialog();
   //Currently unused
   const btnTextAnimateClassName = isTransitioning ? cx("state-slide-down-txt") : "";
   //Use api on first render and when page change
   useEffect(() => {
     fetchProducts();
   }, [pageIndex]);
+  useEffect(() => {
+    console.log("Selected product: ", selectedProduct);
+
+  }, [selectedProduct]);
+  //API
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -76,8 +91,8 @@ const Products = () => {
       setLoading(false);
     }
   };
-  //Add to db.
-  const addProduct = async ({
+  //Add a new product to DB
+  const addProductHandler = async ({
     productName,
     type,
     brand,
@@ -89,6 +104,7 @@ const Products = () => {
     images,
   }) => {
     try {
+      setIsAddingProduct(true);
       //If any is null/undefined, return, except imgs
       if (!productName || !type || !brand || !manufacturer || !countryOrigin || !sellPrice || !importPrice || !quantity) {
         console.log("Missing field");
@@ -110,71 +126,31 @@ const Products = () => {
       const response = await ProductApiController.addProduct(formData);
       if (response.status === 200) {
         console.log("Add product successfully");
+        showSnackbar("Add product successfully", "success");
       }
+      else {
+        showSnackbar("Add product failed", "error");
+        console.log("Add product failed: ", response);
+      }
+
       return response;
     } catch (error) {
       return error;
     }
+    finally {
+      setIsAddingProduct(false);
+    }
   };
-  //Used to update quantity to current cart
-  const updateQuantity = (index, increment) => {
-    // Make a copy of the order items array
-    let newItems = [...orderItems];
-    // Only decrement if the quantity is greater than 0
-    if (newItems[index].quantity === 0 && increment === -1) {
-      return;
-    }
-    // If the quantity is 0 and the increment is -1, remove the item from the array
-    if (newItems[index].quantity === 0 && increment === -1) {
-      newItems.splice(index, 1);
-    }
-    // Otherwise, update the quantity of the item
-    newItems[index].quantity += increment;
-    console.log("New items: ", newItems);
-    // Set the new items array as the state
-    setOrderItems(newItems);
+  //Delete the selected product
+  const deleteProductHandler = async () => {
+    console.log("Delete product: ", selectedProduct);
+    showDialog({
+      header: "Delete product",
+      message: "Are you sure you want to delete this product?",
+    });
   };
-  const clearOrder = () => {
-    setOrderItems([]);
-    setOrderCustomerId(null);
-  };
-  //Add to cart function
-  const addToCart = (product) => {
-    //Check if is cart
-    if (isAddProduct) {
-      return;
-    }
-    //If product quantity is 0, return
-    if (product.quantity === 0) {
-      showSnackbar("Product is out of stock", "error");
-      return;
-    }
-    // Make a copy of the order items array
-    let newItems = [...orderItems];
-    // Check if the product is already in the cart
-    const index = newItems.findIndex((item) => item.product._id === product._id);
-    // If the product is not in the cart
-    if (index === -1) {
-      // Add the product to the cart with a quantity of 1
-      newItems.push({ product: product, quantity: 1 });
-    } else {
-      // Otherwise, increment the quantity of the product in the cart
-      newItems[index].quantity++;
-    }
-    // Set the new items array as the state
-    setOrderItems(newItems);
-
-  }
-  //Switch between cart and add product
-  function switchCartAndAddProduct() {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setIsAddProduct(!isAddProduct);
-      setIsTransitioning(false);
-    }, transitionTime);
-  }
-  //Make order function
-  async function makeOrder() {
+  //Make a new order. Add to db on success
+  async function makeOrderHandler() {
     try {
       setIsOrdering(true);
       //An array that contains [ {productId, quantity}, {productId, quantity}, ...]
@@ -234,6 +210,115 @@ const Products = () => {
       setIsOrdering(false);
     }
   }
+  // Misc functions
+  const clearOrder = () => {
+    setOrderItems([]);
+    setOrderCustomerId(null);
+  };
+
+  //Used to update quantity to current cart
+  const cart_UpdateProductQuantity = (index, increment) => {
+    // Make a copy of the order items array
+    let newItems = [...orderItems];
+    // Only decrement if the quantity is greater than 0
+    if (newItems[index].quantity === 0 && increment === -1) {
+      return;
+    }
+    // If the quantity is 0 and the increment is -1, remove the item from the array
+    if (newItems[index].quantity === 0 && increment === -1) {
+      newItems.splice(index, 1);
+    }
+    // Otherwise, update the quantity of the item
+    newItems[index].quantity += increment;
+    console.log("New items: ", newItems);
+    // Set the new items array as the state
+    setOrderItems(newItems);
+  };
+
+  //Add to cart function
+  const cart_addProduct = (product) => {
+    //Check if is cart
+    if (isAddProduct) {
+      return;
+    }
+    //If product quantity is 0, return
+    if (product.quantity === 0) {
+      showSnackbar("Product is out of stock", "error");
+      return;
+    }
+    // Make a copy of the order items array
+    let newItems = [...orderItems];
+    // Check if the product is already in the cart
+    const index = newItems.findIndex((item) => item.product._id === product._id);
+    // If the product is not in the cart
+    if (index === -1) {
+      // Add the product to the cart with a quantity of 1
+      newItems.push({ product: product, quantity: 1 });
+    } else {
+      // Otherwise, increment the quantity of the product in the cart
+      newItems[index].quantity++;
+    }
+    // Set the new items array as the state
+    setOrderItems(newItems);
+
+  }
+
+  //Product select for actions.
+  //Generally used for delete product
+  //Also used to edit product
+  const onProductSelect = (product) => {
+    switchProductBorderColor(product);
+    setSelectedProduct((prevSelectedProduct) =>
+      JSON.stringify(prevSelectedProduct) === JSON.stringify(product) ? null : product
+    );
+
+  };
+  //Change border color of selected product
+  const switchProductBorderColor = (product) => {
+    if (!product)
+      return;
+
+    //If same product, change it back to normal
+    if (selectedProduct && selectedProduct._id === product._id) {
+      const element = document.getElementById(product._id);
+      if (element) {
+        element.style.borderColor = "";
+        //Reset border width
+        element.style.borderWidth = "";
+      }
+      return;
+    }
+    //Change border color of current selected to normal, if any
+    if (selectedProduct) {
+      const element = document.getElementById(selectedProduct._id);
+      if (element) {
+        element.style.borderColor = "";
+        //Reset border width
+        element.style.borderWidth = "";
+      }
+    }
+    //Change border color of next selected to green
+    const element = document.getElementById(product._id);
+    if (element) {
+      element.style.borderColor = "green";
+      //Increase border width
+      element.style.borderWidth = "thick";
+    }
+
+  }
+
+  //Switch between cart and add product form/ also manage state of transition
+  function switchBetweenCartAndProduct() {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setIsAddProduct(!isAddProduct);
+      //Reset selected product
+      switchProductBorderColor(selectedProduct);
+      setSelectedProduct(null);
+      setIsTransitioning(false);
+    }, transitionTime);
+  }
+
   //************************************ */
 
   return (
@@ -248,11 +333,17 @@ const Products = () => {
           </span>
           <span>
             <button className={cx("btn-add")}
-              onClick={switchCartAndAddProduct}>
+              onClick={switchBetweenCartAndProduct}>
               <div className={btnTextAnimateClassName}>
-                {isAddProduct ? "Order" : "Add product"}
+                {isAddProduct ? "To order section" : "To manage product"}
               </div>
             </button>
+            {!isAddProduct ? null : (
+              <DeleteProductButton
+                onDelete={deleteProductHandler}
+                status={selectedProduct}
+              />
+            )}
           </span>
         </span>
         <span className={cx("right-side-btn-group")}>
@@ -290,7 +381,8 @@ const Products = () => {
             <ListWithLoading
               isLoading={loading}
               data={storeProducts}
-              renderItem={(item, index) => <Product key={index} productData={item} onClick={() => addToCart(item)} />}
+              renderItem={(item, index) => <Product key={index} productData={item}
+                onClick={() => isAddProduct ? onProductSelect(item) : cart_addProduct(item)} />}
             />
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
@@ -314,24 +406,30 @@ const Products = () => {
                 <ProductCart
                   clearOrder={clearOrder}
                   orderItems={orderItems}
-                  updateQuantity={updateQuantity}
+                  updateQuantity={cart_UpdateProductQuantity}
                   taxRate={taxRate}
                   addtionalContainerClassName={cx({
                     [cx("state-slide-out")]: isTransitioning,
                   })}
-                  onSubmit={makeOrder}
+                  onSubmit={makeOrderHandler}
                   setOrderCustomer={setOrderCustomerId}
                   setOrderStatus={setOrderStatus}
                 />
               )}
             </div>
           ) : (
-            <AddProductForm
-              addProductHandler={addProduct}
-              addtionalContainerClassName={cx({
-                [cx("state-slide-down")]: isTransitioning,
-              })}
-            />
+            <div className={cx("add-product-container")}>
+              {isAddingProduct ? (
+                <CircularProgress size={50} thickness={5} className={cx("circular-progress")} />
+              ) : (
+                <AddProductForm
+                  addProductHandler={addProductHandler}
+                  addtionalContainerClassName={cx({
+                    [cx("state-slide-down")]: isTransitioning,
+                  })}
+                />
+              )}
+            </div>
           )}
         </div>
       </div>

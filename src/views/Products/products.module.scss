@@ -44,27 +44,6 @@
   font-size: 12px;
 }
 
-.btn-add {
-  width: 135px;
-  height: 37px;
-  margin-left: 20px;
-  background-color: #2C7A51;
-  color: #ffffff;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 20px;
-  transition: all 0.2s ease-in-out;
-
-  overflow: hidden;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-
-
-
-}
 
 
 .btn-plus {
@@ -641,7 +620,67 @@
   }
 }
 
+.delete-product-button {
+  //Red
+  background-color: #E74C3C;
+  color: white;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  width: 15%;
+  height: 37px;
+  margin-left: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
 
+  &:hover {
+    background-color: #c0392b;
+  }
+
+  //Add a button slide up animation at start
+  animation: buttonSlideUp 0.5s ease-in-out forwards;
+
+}
+
+.disabled {
+  background-color: #B6CAC0;
+  color: #0F2319;
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: #B6CAC0;
+  }
+}
+
+.btn-add {
+  width: 15%;
+  height: 37px;
+  margin-left: 20px;
+  background-color: #2C7A51;
+  color: #ffffff;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  transition: all 0.2s ease-in-out;
+
+  overflow: hidden;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+//Button slide up animation
+@keyframes buttonSlideUp {
+  0% {
+    transform: translateY(200%);
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
+}
 
 .total {
   display: flex;
