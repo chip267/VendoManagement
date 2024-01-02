@@ -102,9 +102,9 @@ function Customers() {
 
               />
               <SortLabel
-                label="Bought"
-                onClick={() => console.log("Sort by bought")}
-                sortValue="bought"
+                label="Spent"
+                onClick={() => console.log("Sort by spent")}
+                sortValue="totalValueBought"
 
               />
               <SortLabel
@@ -147,19 +147,22 @@ function Customers() {
                   id={index}
                 />
               )}
+
             />
           </tbody>
         </table>
       </div>
-      <Pagination
-        className={cx("pagination")}
-        count={Math.ceil(totalCounts / maxItemsPerPage)}
-        onChange={(event, page) => setPageIndex(page - 1)}
-        variant="outlined"
-        shape="rounded"
-        //#EBFAED
-        color="primary"
-      />
+      <div className={cx("pagination")}>
+        <Pagination
+          className={cx("pagination")}
+          count={Math.ceil(totalCounts / maxItemsPerPage)}
+          onChange={(event, page) => setPageIndex(page - 1)}
+          variant="outlined"
+          shape="rounded"
+          //#EBFAED
+          color="primary"
+        />
+      </div>
     </div>
   );
 }
