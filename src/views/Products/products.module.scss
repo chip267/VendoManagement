@@ -440,9 +440,17 @@
   animation: slideDown var(--switch-transition-duration) forwards;
 }
 
+//Order side
 .customer-search-bar {
   width: 100%;
   margin-top: 20px;
+}
+
+.delivered-checkbox {
+
+  font-size: 18px;
+  font-weight: 500;
+  color: #0F2319;
 }
 
 @keyframes slideDownTxt {
@@ -596,6 +604,14 @@
   cursor: pointer;
 }
 
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  width: 100%;
+
+}
 
 //******** total payment ********
 .summary {

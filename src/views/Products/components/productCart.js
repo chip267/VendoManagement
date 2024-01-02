@@ -7,7 +7,17 @@ import classNames from 'classnames/bind';
 import CustomerSearchbar from './customerSearchbar';
 const cx = classNames.bind(styles);
 
-function ProductCart({ clearOrder, orderItems, updateQuantity, taxRate = 0.03, key, addtionalContainerClassName, onSubmit = null, setOrderCustomer = null }) {
+function ProductCart({
+    clearOrder,
+    orderItems,
+    updateQuantity,
+    taxRate = 0.03,
+    key,
+    addtionalContainerClassName,
+    onSubmit = null,
+    setOrderCustomer = null,
+    setOrderStatus = null
+}) {
     const SubmitButton = (onPress) => {
         return (
             <div className={cx("btn-payment")} onClick={onPress}>
@@ -31,7 +41,12 @@ function ProductCart({ clearOrder, orderItems, updateQuantity, taxRate = 0.03, k
         <div className={cx("customer-search-bar")}>
             <CustomerSearchbar setOrderCustomer={setOrderCustomer} />
         </div>
-        <OrderInformation items={orderItems} taxRate={taxRate} submitButton={SubmitButton(onSubmit)} />
+        <OrderInformation
+            items={orderItems}
+            taxRate={taxRate}
+            submitButton={SubmitButton(onSubmit)}
+            setOrderStatus={setOrderStatus}
+        />
     </div>);
 }
 export default ProductCart;

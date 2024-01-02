@@ -48,7 +48,7 @@ const CustomerSearchbar = ({ setOrderCustomer }) => {
     }
 
     const searchInDatabase = async (phoneNumber) => {
-        console.log("Searching in database");
+        // console.log("Searching in database");
         await CustomerApiController.getCustomers({ phoneNumber, limit: limitSearch }).then(response => {
             if (response.success) {
                 setCustomerList(response.data.results.map(customer => ({
@@ -65,7 +65,7 @@ const CustomerSearchbar = ({ setOrderCustomer }) => {
 
     const fetchData = async () => {
         setIsSearching(true);
-        console.log("Fetching data");
+        // console.log("Fetching data");
         const response = await CustomerApiController.getCustomers({ limit: limitCache });
         if (response.success) {
             setCustomerCache(response.data.results);

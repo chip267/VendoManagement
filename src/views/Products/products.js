@@ -6,13 +6,13 @@ import ProductCart from "./components/productCart";
 import ProductApiController from "../../api/products";
 import ListWithLoading from "../GeneralComponents/ListWithLoading";
 import AddProductForm from "./components/addProductForm";
-import { Pagination } from "@mui/material";
+import { Pagination, Snackbar } from "@mui/material";
 import { useEffect } from "react";
 import { IMG_Logo } from "../../assets/images";
 import OrderApiController from "../../api/order";
-import ObjectID from "bson-objectid";
 import { UserApiController } from "../../api/user";
 import { CircularProgress } from "@mui/material";
+import { useGlobalSnackbar } from "../Base/basePage";
 const cx = classNames.bind(styles);
 const imgUrlTest = IMG_Logo
 const maxItemPerPage = 6;
@@ -41,11 +41,11 @@ const transitionTime = 500;
 const Products = () => {
   // Option for the type bar.
   const [selectedOption, setSelectedOption] = useState('null');
-
-
   //For order
   const [isOrdering, setIsOrdering] = useState(false);
   const [orderCustomerId, setOrderCustomerId] = useState(null);
+  //Used to check if customer buy at store,if yes, set order status to  "Delivered"
+  const [orderStatus, setOrderStatus] = useState(null);
   //For product
   const [loading, setLoading] = useState(false);
   const [storeProducts, setStoreProducts] = useState(() => initStoreProducts());
@@ -54,6 +54,8 @@ const Products = () => {
   //On press add product button. Hide the cart section and show the add product 
   const [isAddProduct, setIsAddProduct] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  //Snackbar
+  const { showSnackbar } = useGlobalSnackbar();
   //Currently unused
   const btnTextAnimateClassName = isTransitioning ? cx("state-slide-down-txt") : "";
   //Use api on first render and when page change
@@ -138,6 +140,15 @@ const Products = () => {
   };
   //Add to cart function
   const addToCart = (product) => {
+    //Check if is cart
+    if (isAddProduct) {
+      return;
+    }
+    //If product quantity is 0, return
+    if (product.quantity === 0) {
+      showSnackbar("Product is out of stock", "error");
+      return;
+    }
     // Make a copy of the order items array
     let newItems = [...orderItems];
     // Check if the product is already in the cart
@@ -186,15 +197,33 @@ const Products = () => {
       order.employeeId = UserApiController.user.employeeId;
       //Create order
       const response = await OrderApiController.addOrder(order);
+      const orderId = response.data.order._id;
       console.log("Response: ", response);
       if (response.success) {
         console.log("Make order successfully");
+        showSnackbar("Make order successfully", "success");
         clearOrder();
       }
       else {
+        showSnackbar("Make order failed", "error");
         console.log("Make order failed");
-
       }
+      console.log("Order id: ", orderId);
+      if (orderStatus === "Delivered") {
+        const response = await OrderApiController.setOrderDelivered(orderId);
+        if (response.success) {
+          showSnackbar("Order is delivered", "success");
+        }
+        else {
+          showSnackbar("Set order delivered failed", "error");
+          console.log("Set order delivered failed");
+          console.log("Response: ", response);
+        }
+      }
+      else {
+        showSnackbar("Order is pending", "success");
+      }
+
       setIsOrdering(false);
     }
     catch (error) {
@@ -257,23 +286,24 @@ const Products = () => {
       </div>
       <div className={cx("wrapper")}>
         <div className={cx("wrapper-left")}>
-
-          <div className={cx("products")}>
+          <div className={loading ? cx("loading") : cx("products")}>
             <ListWithLoading
               isLoading={loading}
               data={storeProducts}
               renderItem={(item, index) => <Product key={index} productData={item} onClick={() => addToCart(item)} />}
             />
           </div>
-          <Pagination
-            count={Math.ceil(totalCounts / maxItemPerPage)}
-            page={pageIndex}
-            onChange={(event, value) => setPageIndex(value)}
-            className={styles.pagination}
-            variant="outlined"
-            shape="rounded"
-            color="primary"
-          />
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+            <Pagination
+              count={Math.ceil(totalCounts / maxItemPerPage)}
+              page={pageIndex}
+              onChange={(event, value) => setPageIndex(value)}
+              className={styles.pagination}
+              variant="outlined"
+              shape="rounded"
+              color="primary"
+            />
+          </div>
         </div>
         <div className={cx("wrapper-right")}>
           {!isAddProduct ? (
@@ -291,6 +321,7 @@ const Products = () => {
                   })}
                   onSubmit={makeOrder}
                   setOrderCustomer={setOrderCustomerId}
+                  setOrderStatus={setOrderStatus}
                 />
               )}
             </div>

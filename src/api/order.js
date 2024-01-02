@@ -58,6 +58,28 @@ class OrderController {
             return error;
         }
     }
+    async setOrderDelivered(orderId) {
+        try {
+            const status = {
+                status: "Delivered"
+            }
+            const response = await apiInstance.patch("/api/orders/" + orderId, status, { withCredentials: true });
+            if (response.status === 200) {
+                return {
+                    success: true,
+                    data: response.data
+                };
+            }
+            else {
+                return {
+                    success: false,
+                    data: null
+                };
+            }
+        } catch (error) {
+            return error;
+        }
+    }
     async addOrder(order) {
         try {
             const response = await apiInstance.post("/api/orders", order, { withCredentials: true });
@@ -81,7 +103,7 @@ class OrderController {
     }
     async updateOrder(order) {
         try {
-            const response = await apiInstance.put("/api/orders/" + order.id, order, { withCredentials: true });
+            const response = await apiInstance.patch("/api/orders/" + order.id, order, { withCredentials: true });
             return response;
         } catch (error) {
             return error;

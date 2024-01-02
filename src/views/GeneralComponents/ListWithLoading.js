@@ -7,12 +7,15 @@ const ListWithLoading = ({
     renderItem,
     emptyText,
     contentContainerClassName,
-    listFooter
+    listFooter,
+
 }) => {
     return (
         !contentContainerClassName ? <>
             {isLoading ? (
-                <div className='flex justify-center items-center py-4'>
+                <div style={{
+                    width: "100%"
+                }} className='flex justify-center items-center py-4'>
                     <CircularProgress />
                 </div>
             ) : data?.length > 0 ? (
