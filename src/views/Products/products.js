@@ -401,7 +401,14 @@ const Products = () => {
           {!isAddProduct ? (
             <div className={cx("product-cart-container")}>
               {isOrdering ? (
-                <CircularProgress size={50} thickness={5} className={cx("circular-progress")} />
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+                  <CircularProgress
+                    size={50} thickness={5}
+                    sx={{
+                      color: "#2C7A51"
+                    }}
+                    className={cx("circular-progress")} />
+                </div>
               ) : (
                 <ProductCart
                   clearOrder={clearOrder}
