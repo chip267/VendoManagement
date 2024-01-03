@@ -8,7 +8,11 @@ import { useEffect } from "react";
 import { List, Pagination } from "@mui/material";
 import CustomerRecord from "./components/customerRecord";
 import ListWithLoading from "../GeneralComponents/ListWithLoading";
+import { CircularProgress } from "@mui/material";
 import CustomerApiController from "../../api/customer";
+import AddCustomerForm from "./components/addCustomerForm";
+import { useGlobalSnackbar } from "../Base/basePage";
+import { useGlobalConfirmDialog } from "../Base/componentContext/confirmDialog";
 //import images from "../../assets/images";
 const testUrl = IMG_Logo;
 const cx = classNames.bind(styles);
@@ -29,7 +33,45 @@ function Customers() {
 
   const [pageIndex, setPageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [customers, setCustomers] = useState([]);
+  const { showSnackbar } = useGlobalSnackbar();
+  const { showDialog, hideDialog, setWaitting } = useGlobalConfirmDialog();
+  const [isAddingCustomer, setIsAddingCustomer] = useState(false);
+  const [showAddCustomerForm, setShowAddCustomerForm] = useState(false);
+  const addCustomerHandler = async (customer) => {
+    try {
+
+      setIsAddingCustomer(true);
+      //Check if customer has name, phoneNumber, address
+      if (!customer.name || !customer.phoneNumber || !customer.address) {
+        console.log("Customer has no name, phoneNumber, address");
+        showSnackbar("Customer has no name, phoneNumber, address", "error");
+        return;
+      }
+      //Check if customer has any other properties
+      if (Object.keys(customer).length > 3) {
+        showSnackbar("Customer has other properties", "error");
+        return;
+      }
+      const response = await CustomerApiController.addCustomer(customer);
+      if (response.success) {
+        showSnackbar("Add customer successfully", "success");
+        setShowAddCustomerForm(false);
+        fetchCustomers(pageIndex, maxItemsPerPage);
+      }
+      else {
+        showSnackbar("Add customer failed", "error");
+      }
+    }
+    catch (error) {
+      console.log(error);
+      showSnackbar("Add customer failed", "error");
+    }
+    finally {
+      setIsAddingCustomer(false);
+    }
+  }
   const fetchCustomers = async (page = defaultPage, limit = maxItemsPerPage) => {
     try {
       setIsLoading(true);
@@ -37,24 +79,56 @@ function Customers() {
       if (response.success) {
         setCustomers(response.data.results);
         totalCounts = response.data.totalDocuments;
-        console.log("Fetch customers: ", response.data.results);
-        console.log("Total counts: ", totalCounts);
       }
       else {
         console.log("Fetch customers failed");
+        showSnackbar("Fetch customers failed", "error");
       }
     }
     catch (error) {
       console.log(error);
+      showSnackbar("Fetch customers failed", "error");
     }
     finally {
       setIsLoading(false);
     }
 
   }
+  async function handleDeleteCustomer(customer) {
+    await showDialog({
+      header: "Delete customer",
+      message: "Are you sure you want to delete this customer?",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      onConfirm: async () => {
+        setIsDeleting(true);
+        setWaitting({ isWaiting: true });
+        try {
+          const response = await CustomerApiController.deleteCustomer(customer._id);
+          if (response.success) {
+            showSnackbar("Delete customer successfully", "success");
+            fetchCustomers(pageIndex, maxItemsPerPage);
+          }
+          else {
+            showSnackbar("Delete customer failed", "error");
+          }
+        }
+        catch (error) {
+          console.log(error);
+          showSnackbar("Delete customer failed", "error");
+        }
+        console.log("Delete customer: ", customer);
+        setIsDeleting(false);
+        hideDialog();
+
+      }
+
+    });
+  }
   useEffect(() => {
     fetchCustomers(pageIndex, maxItemsPerPage);
   }, [pageIndex]);
+
   return (
     <div className={cx("container")}>
       <div className={cx("header")}>
@@ -72,7 +146,9 @@ function Customers() {
           <input className={cx("search-bar")} type="text number" placeholder="Search" />
         </span>
         <span>
-          <button className={cx("btn-add")}>+ Add Customer</button>
+          <button className={cx("btn-add")} onClick={() => setShowAddCustomerForm(!showAddCustomerForm)}>
+            {showAddCustomerForm ? "Cancel" : "Add"}
+          </button>
         </span>
         <span className={cx("btn-setting")}>
           <button>
@@ -82,8 +158,9 @@ function Customers() {
           </button>
         </span>
       </div>
-      <div className={cx("table-content")}>
-        <table>
+      <div className={cx("lower-container")}>
+
+        <table className={cx("table-content")} style={showAddCustomerForm ? { width: "70%" } : { width: "100%" }}>
           <thead>
             <tr className={cx("label")}>
               <td>
@@ -145,14 +222,30 @@ function Customers() {
                 <CustomerRecord
                   customer={customer}
                   id={index}
+                  onDelete={handleDeleteCustomer}
                 />
               )}
 
             />
           </tbody>
         </table>
+
+        {showAddCustomerForm && <div className={cx("add-container")}>
+          {isAddingCustomer ?
+            (<div className={cx("add-customer-loading")}>
+              <CircularProgress />
+            </div>
+            ) : (
+              <AddCustomerForm
+                show={showAddCustomerForm}
+                addCustomerHandler={addCustomerHandler}
+
+              />
+            )}
+        </div>}
       </div>
-      <div className={cx("pagination")}>
+
+      <div className={cx("pagination")} style={showAddCustomerForm ? { width: "70%" } : { width: "100%" }}>
         <Pagination
           className={cx("pagination")}
           count={Math.ceil(totalCounts / maxItemsPerPage)}
@@ -163,8 +256,7 @@ function Customers() {
           color="primary"
         />
       </div>
-    </div>
-  );
+    </div >);
 }
 
 export default Customers;

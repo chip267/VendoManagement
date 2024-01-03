@@ -1,9 +1,17 @@
 
 import styles from "../customers.module.scss";
 import classNames from "classnames/bind";
+import { IC_Delete } from "../../../assets/icons";
+import { XCircle } from "lucide-react";
 const cx = classNames.bind(styles);
 
-const CustomerRecord = ({ customer, id }) => {
+
+const CustomerRecord = ({
+    customer,
+    id,
+    onClick = null,
+    onDelete = null
+}) => {
     //Number slicer to add a dot after every 3 digits from right to left
     const numberSlicer = (number) => {
         let num = number.toString();
@@ -46,7 +54,10 @@ const CustomerRecord = ({ customer, id }) => {
         }
     }
     return (
-        <tr className={cx("data")} key={id}>
+        <tr className={cx("data")}
+            key={customer._id}
+            id={customer._id}
+            onClick={onClick ? () => onClick(customer) : null} >
             <td><input className={cx("checkmark")} type="checkbox" /></td>
             <td className={cx("people")}>
                 <div className={cx("people-de")}>{customer.name}</div>
@@ -58,20 +69,14 @@ const CustomerRecord = ({ customer, id }) => {
                 <div className={cx(memershipColor(customer.totalValueBought))}>
                     {customer.totalValueBought ? typeOfMembership(customer.totalValueBought) : "N/A"}
                 </div>
-
             </td>
-
             <td>
                 <div className={cx("latest-order")}>{customer.latestOrderDate ? customer.latestOrderDate : "N/A"}</div>
             </td>
             <td className={cx("delete")}>
-                <button className={cx("btn-delete")}>
-                    <svg xmlns="http://www.w3.org/2000/svg" height="10" width="10" viewBox="0 0 384 512">
-                        <path opacity="1" fill="#1E3050" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
-                    </svg>
-                </button>
+                <XCircle className={cx("delete-icon")} onClick={onDelete ? () => onDelete(customer) : null} />
             </td>
-        </tr>
+        </tr >
     )
 }
 export default CustomerRecord;

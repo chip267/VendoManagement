@@ -85,7 +85,19 @@ class CustomerController {
     async deleteCustomer(id) {
         try {
             const response = await apiInstance.delete("/api/customers/" + id, { withCredentials: true });
-            return response;
+            if (response.status === 200) {
+                return {
+                    success: true,
+                    data: response.data
+                };
+            }
+            else {
+                console.log("API: Delete customer failed. Error: ", response);
+                return {
+                    success: false,
+                    data: null
+                };
+            }
         } catch (error) {
             return error;
         }
