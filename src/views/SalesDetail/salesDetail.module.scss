@@ -1,6 +1,6 @@
 .container{
     width: 40vw;
-    height: 100vh;
+    height: fit-content;
     font-family: "Lexend";
     border: 1px solid black;
     border-radius: 20px 0 0 20px;
@@ -120,14 +120,16 @@
 }
 .table-title{
     height: 6%;  
-    margin: 20px;
+    margin: 20px 20px 0px 20px;
 }
 
 .tb3{
     width: 40vw;
-}
-.tb3 tr{
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0 8px; 
+    // .label th{
+    //     border-bottom: 1px solid black;
+    // }
 }
 
 .label{
@@ -139,7 +141,7 @@
     .lb-product{
         width:40%;
         padding-left: 20px;
-        text-align: start;
+        text-align: start;   
     }
     .lb-price{
         width:20%;
@@ -157,10 +159,13 @@
 
 
 .purchase-data{
-    margin-top: 12px;
+    margin-bottom: 10px;
     font-weight: 400;
     font-size: 10px;
     line-height: 20px;
+    &:last-child {
+        margin-bottom: 0; // Remove margin-bottom for the last row to avoid extra space
+    }
 }
 
 .product {
@@ -178,3 +183,34 @@
         border-radius: 5px;
     }
 }
+
+.summary {
+    margin: 40px 70px 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    p{
+        font-size: 11px;
+        font-weight: 400;
+        color: #0F2319;
+    }
+    .subtotal, 
+    .tax, 
+    .discount, 
+    .ship-cost{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        font-weight: 400;
+        font-size: 11px;
+        color: #B6CAC0; 
+    }
+    .total{
+        font-size: 15px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        font-weight: 400;
+        color: #0F2319;
+    }
+  }

@@ -92,21 +92,21 @@
 
     .delete {
         .btn-delete {
-            width: 10px;
-            height: 10px;
-            border-radius: 5px;
-            margin-top: 5px;
-            background-color: #ff0f0f;
+            // width: 10px;
+            // height: 10px;
+            // border-radius: 5px;
+            // margin-top: 5px;
+            // background-color: #ff0f0f;
 
             path {
-                fill: #ffffff;
+                fill: #000000;
             }
 
             &:hover {
                 background-color: #ffffff;
 
                 path {
-                    fill: #000000;
+                    fill: red;
                 }
             }
         }
@@ -154,6 +154,7 @@ tbody td {
     border: 1px solid #E2EFE8;
     border-radius: 4px;
     position: relative;
+    margin-left: 5px;
 }
 
 .checkmark-title {
