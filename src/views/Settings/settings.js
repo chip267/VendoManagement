@@ -12,7 +12,7 @@ const cx = classNames.bind(styles);
 function Settings() {
   const { user, setUser } = useUserContext();
   const Navigation = useNavigate();
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
   const [employeeInfo, setEmployeeInfo] = React.useState(null);
   //Log out 
   const logOut = async () => {
@@ -80,7 +80,11 @@ function Settings() {
     <div className={cx("settings")}>
       {isLoading ? (
         <div className="flex justify-center items-center py-4">
-          <CircularProgress />
+          <CircularProgress
+            sx={{
+              color: "#2C7A51"
+            }}
+          />
         </div>
       ) : (
         page()
