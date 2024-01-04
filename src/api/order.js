@@ -1,9 +1,9 @@
 import apiInstance from ".";
 
 class OrderController {
-    async getOrders() {
+    async getOrders({ page = 1, limit = 10, sortBy = "" }) {
         try {
-            const response = await apiInstance.get("/api/orders", { withCredentials: true });
+            const response = await apiInstance.get("/api/orders", { withCredentials: true, params: { page, limit, sortBy } });
             if (response.status === 200) {
                 return {
                     success: true,
@@ -103,9 +103,33 @@ class OrderController {
     }
     async updateOrder(order) {
         try {
-            const response = await apiInstance.patch("/api/orders/" + order.id, order, { withCredentials: true });
-            return response;
+            const id = order._id;
+            //Remove id 
+            delete order._id;
+            const response = await apiInstance.patch("/api/orders/" + id, order, { withCredentials: true });
+            if (response.status === 200) {
+                console.log("API Order: Update order successfully");
+                return {
+                    success: true,
+                    data: response.data
+                };
+            }
+            else if (response.status === 400) {
+                console.log("API Order: Update order failed. Error: " + response.data);
+                return {
+                    success: false,
+                    data: response.data
+                };
+            }
+            else {
+                console.log("API Order: Update order failed. Error: " + response.data);
+                return {
+                    success: false,
+                    data: null
+                };
+            }
         } catch (error) {
+            console.log("API Order: Update order failed. Error: " + error);
             return error;
         }
     }
