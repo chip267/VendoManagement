@@ -3,10 +3,15 @@ import { Autocomplete } from '@mui/material';
 import { TextField } from '@mui/material';
 import CustomerApiController from '../../../api/customer';
 import { CircularProgress } from '@mui/material';
-const limitCache = 2;
+const limitCache = 10;
 const limitSearch = 10; // New limit for database search
-
-const CustomerSearchbar = ({ setOrderCustomer }) => {
+//General search bar that return id to setOrderCustomer
+const CustomerSearchbar = (
+    {
+        setOrderCustomer, // Used
+        defaultCustomer = null
+    }
+) => {
     const [customerCache, setCustomerCache] = useState([]);
     const [customerList, setCustomerList] = useState([]);
     const [searchText, setSearchText] = useState("");
@@ -30,7 +35,11 @@ const CustomerSearchbar = ({ setOrderCustomer }) => {
         if (Date.now() - lastTypeTime >= 500) {
             return;
         }
-
+        //If text is empty, load from cache
+        if (!searchText) {
+            await fetchData();
+            return;
+        }
         setIsSearching(true);
         if (!customerCache.length) {
             await fetchData();
@@ -52,7 +61,6 @@ const CustomerSearchbar = ({ setOrderCustomer }) => {
         setIsSearching(false);
     };
     const searchInCache = (searchTerm) => {
-        // // If phone number is text not number, search using name
         const isNum = /^\d+$/.test(searchTerm);
 
         if (!isNum) {
@@ -192,7 +200,7 @@ const CustomerSearchbar = ({ setOrderCustomer }) => {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Customer Phone Number"
+                    label={defaultCustomer && searchText === "" ? defaultCustomer.name : "Customer phone number"}
                     value={searchText}
                     InputProps={
                         {

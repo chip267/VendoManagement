@@ -2,7 +2,12 @@ import styles from "../products.module.scss";
 import classNames from "classnames/bind";
 
 const cx = classNames.bind(styles);
-const OrderItem = ({ itemData, index, updateQuantity }) => {
+const OrderItem = ({
+    itemData,
+    index,
+    updateQuantity,
+    preventEdit = false
+}) => {
     const productData = itemData.product;
     const associatedQuantity = itemData.quantity;
     return (
@@ -15,19 +20,26 @@ const OrderItem = ({ itemData, index, updateQuantity }) => {
                 <div className={styles.price}>{productData.sellPrice} vnd</div>
             </div>
             <div className={styles.quantity}>
-                <button
-                    className={styles.decrement}
-                    onClick={() => updateQuantity(index, -1)}
-                >
-                    -
-                </button>
-                <p>{associatedQuantity}</p>
-                <button
-                    className={styles.increment}
-                    onClick={() => updateQuantity(index, 1)}
-                >
-                    +
-                </button>
+                {!preventEdit ? (
+                    <>
+                        <button
+                            className={styles.decrement}
+                            onClick={() => updateQuantity(index, -1)}
+                        >
+                            -
+                        </button>
+                        <p>{associatedQuantity}</p>
+
+                        <button
+                            className={styles.increment}
+                            onClick={() => updateQuantity(index, 1)}
+                        >
+                            +
+                        </button>
+                    </>
+                ) : (
+                    <p>{associatedQuantity}</p>
+                )}
             </div>
         </div>
     )
