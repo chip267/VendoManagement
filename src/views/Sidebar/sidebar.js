@@ -65,12 +65,20 @@ function Sidebar() {
   });
 
   const contentStyleTab = {
-    width: "80%",
+    width: "83%",
     overflow: "hidden",
     overflowY: "scroll",
   };
+  const dividerWithLineStyle = {
+    width: "2%",
+    height: "100vh",
+    borderRight: "1.2px solid #CAE1D6",
+    marginRight: "1%",
+  };
   const contentStyleSideBar = {
-    width: "20%",
+    width: "15%",
+    //Rightside line
+
   };
   return (
     <div style={{ display: "flex" }}>
@@ -82,6 +90,7 @@ function Sidebar() {
         />
         <ul className="my-10">{tabList}</ul>
       </div>
+      <div style={dividerWithLineStyle}></div>
       <div className="tab-side" style={contentStyleTab}>{tabs[index]}</div>
     </div>
   );

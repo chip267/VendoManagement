@@ -7,7 +7,9 @@ import { createContext, useContext } from "react"
 import GlobalSnackbar from "./components/globalSnackbar"
 import { GlobalConfirmDialogProvider } from "./componentContext/confirmDialog"
 import { Global } from "@emotion/react"
-
+import styles from "./basePage.module.scss"
+import classNames from "classnames/bind"
+const cx = classNames.bind(styles)
 //Global snackbar context
 export const GlobalSnackbarContext = createContext();
 export const useGlobalSnackbar = () => useContext(GlobalSnackbarContext);
@@ -36,7 +38,7 @@ const BasePage = () => {
         <UserProvider>
             <GlobalConfirmDialogProvider>
                 <GlobalSnackbarContext.Provider value={contextValue}>
-                    <div className='min-h-screen bg-gray-50'>
+                    <div className={cx('basePage') + " min-h-screen bg-gray-50"}>
                         <Outlet />
                         <GlobalSnackbar
                             open={snackbarState.open}
