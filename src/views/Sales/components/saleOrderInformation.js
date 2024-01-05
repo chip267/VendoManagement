@@ -33,7 +33,8 @@ const SaleOrderInformation = ({
     const getSubtotal = () => {
         let subtotal = 0;
         items.forEach((item) => {
-            subtotal += item.product.sellPrice * item.quantity;
+            if (item.product)
+                subtotal += item.product.sellPrice * item.quantity;
         });
         return subtotal;
     };

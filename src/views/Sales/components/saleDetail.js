@@ -19,7 +19,7 @@ const SaleDetail = ({
     onSubmit = null,
     taxRate = 0.03,
 }) => {
-    const [orderCustomer, setOrderCustomer] = useState(sale.customerId._id);
+    const [orderCustomer, setOrderCustomer] = useState(sale.customerId ? sale.customerId._id : null);
     const [products, setProducts] = useState(sale.orderDetails.map((item) => { return { product: { ...item }.productId, quantity: item.quantity } }));
     //Cant change employee who made the order
     const [orderStatus, setOrderStatus] = useState(sale.status);
@@ -92,9 +92,15 @@ const SaleDetail = ({
             customerId: orderCustomer,
             status: orderStatus,
             newOrderDetails: products.map((item) => {
-                return {
-                    productId: item.product._id,
-                    quantity: item.quantity
+                //Null check
+                if (!item.product) {
+                    return null;
+                }
+                else {
+                    return {
+                        productId: item.product._id,
+                        quantity: item.quantity
+                    }
                 }
             })
 
@@ -135,7 +141,7 @@ const SaleDetail = ({
                                     Customer: </span>
 
                                 <span className={cx('customer-name')}>
-                                    {sale.customerId.name}</span>
+                                    {sale.customerId ? sale.customerId.name : "No customer found"} </span>
 
                             </div>
 
@@ -143,7 +149,7 @@ const SaleDetail = ({
                     ) : (
                         <CustomerSearchbar
                             setOrderCustomer={setOrderCustomer}
-                            defaultCustomer={sale.customerId}
+                            defaultCustomer={sale.customerId ? sale.customerId : null}
                         />
                     )}
             </div>

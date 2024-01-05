@@ -91,7 +91,13 @@ function Sales() {
             filteredUpdateInfo.status = updateInfo.status;
         }
         if (updateInfo.newOrderDetails) {
-            filteredUpdateInfo.newOrderDetails = updateInfo.newOrderDetails;
+            //Null check
+            if (updateInfo.newOrderDetails.length > 0 && updateInfo.newOrderDetails[0]) {
+                filteredUpdateInfo.newOrderDetails = updateInfo.newOrderDetails;
+                //If any of the product is null, remove it
+                filteredUpdateInfo.newOrderDetails = filteredUpdateInfo.newOrderDetails.filter((item) => item !== null);
+            }
+
         }
         if (updateInfo._id) {
             filteredUpdateInfo._id = updateInfo._id;
@@ -103,7 +109,7 @@ function Sales() {
             message: "Are you sure you want to update this sale?",
             onConfirm: async () => {
                 setIsUpdating(true);
-                const response = await OrderApiController.updateOrder(updateInfo);
+                const response = await OrderApiController.updateOrder(filteredUpdateInfo);
                 if (response.success) {
                     hideDialog();
                     fetchSaleData(pageIndex, limitPerPage);
