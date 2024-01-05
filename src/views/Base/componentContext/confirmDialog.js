@@ -14,6 +14,11 @@ export const GlobalConfirmDialogProvider = ({ children }) => {
         onCancel: null,
         confirmButtonText: "Confirm",
         cancelButtonText: "Cancel",
+        isWaiting: false,
+        isConfirmDisabled: false,
+        isCancelDisabled: false,
+        waitingComponent: null,
+
     });
 
     const showDialog = ({
@@ -23,6 +28,11 @@ export const GlobalConfirmDialogProvider = ({ children }) => {
         onCancel = null,
         confirmButtonText = "Confirm",
         cancelButtonText = "Cancel",
+        isWaiting = false,
+        isConfirmDisabled = false,
+        isCancelDisabled = false,
+        waitingComponent = null,
+
     }) => {
         setDialogState({
             open: true,
@@ -32,6 +42,10 @@ export const GlobalConfirmDialogProvider = ({ children }) => {
             onCancel,
             confirmButtonText,
             cancelButtonText,
+            isWaiting,
+            isConfirmDisabled,
+            isCancelDisabled,
+            waitingComponent,
         });
     };
 
@@ -44,12 +58,27 @@ export const GlobalConfirmDialogProvider = ({ children }) => {
             onCancel: null,
             confirmButtonText: "Confirm",
             cancelButtonText: "Cancel",
+            isWaiting: false,
+            isConfirmDisabled: false,
+            isCancelDisabled: false,
+            waitingComponent: null,
+
         });
     };
-
+    const setWaitting = ({
+        isWaiting = false,
+        waitingComponent = null,
+    }) => {
+        setDialogState({
+            ...dialogState,
+            isWaiting,
+            waitingComponent,
+        });
+    };
     const contextValue = {
         showDialog,
         hideDialog,
+        setWaitting,
     };
 
     return (
@@ -63,6 +92,11 @@ export const GlobalConfirmDialogProvider = ({ children }) => {
                 confirmButtonText={dialogState.confirmButtonText}
                 cancelButtonText={dialogState.cancelButtonText}
                 onClose={hideDialog}
+                isWaiting={dialogState.isWaiting}
+                isConfirmDisabled={dialogState.isConfirmDisabled}
+                isCancelDisabled={dialogState.isCancelDisabled}
+                waitingComponent={dialogState.waitingComponent}
+
             />
             {children}
         </GlobalConfirmDialogContext.Provider>

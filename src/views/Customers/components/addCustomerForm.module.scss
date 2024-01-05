@@ -1,0 +1,87 @@
+/* customers.module.scss */
+
+.addCustomerFormContainer {
+    display: flex;
+    flex-direction: column;
+    //Take up available space
+    //Center the form horizontally and vertically
+    flex-grow: 1;
+
+    /* Initially hide the form */
+    .addCustomerFormWrapper {
+        width: 90%;
+        background-color: #fff;
+        /* Background color */
+        padding: 20px;
+        border: 1px solid gray;
+        border-radius: 30px;
+        ;
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+        animation: slideLeft 0.2s ease-in-out;
+
+        h2 {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #2c7a51;
+            font-weight: 500;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+
+        }
+
+        .confirmButton {
+            margin-top: 20px;
+            background-color: #2c7a51;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #1e5230;
+            }
+
+            //Water drop effect on click
+
+
+
+        }
+
+        .addCustomerForm {
+            display: grid;
+            gap: 15px;
+        }
+
+
+        /* Show the form when the 'show' class is present */
+        .addCustomerFormContainer.show {
+            display: block;
+        }
+    }
+
+}
+
+//Slide left animation
+@keyframes slideLeft {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}

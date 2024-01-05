@@ -7,6 +7,10 @@ import { Pagination } from "@mui/material";
 import { useState } from "react";
 import SortLabel from "./components/sortLabel";
 import SaleData from "./components/saleData";
+
+// import CustomerApiController from "../../api/customer";
+// import ListWithLoading from "../GeneralComponents/ListWithLoading";
+
 const cx = classNames.bind(styles);
 const testUrl = IMG_Logo;
 const maxItemPerPage = 3;
@@ -81,6 +85,41 @@ function Sales() {
     //sale data api go here
     const [saleData, setSaleData] = useState(sampleSaleData);
     const [sliceSaleData, setSliceSaleData] = useState([]);
+
+    // const [isLoading, setIsLoading] = useState(false);
+    // const [sales, setSales] = useState([]);
+
+    // const initSales = async () => {
+    //     try {
+    //         // Call your SaleApiController to initialize sales data
+    //         const response = await CustomerApiController.getSales({ page: 1, limit: maxItemPerPage });
+    //         if (response.success) {
+    //             setSaleData(response.data.results);
+    //         } else {
+    //             console.error("Failed to initialize sales data");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error initializing sales data", error);
+    //     }
+    // };
+
+    // const fetchSales = async (page = 1, limit = maxItemPerPage) => {
+    //     try {
+    //         // Call your SaleApiController to fetch sales data
+    //         const response = await CustomerApiController.getSales({ page, limit });
+    //         if (response.success) {
+    //             setSaleData(response.data.results);
+    //         } else {
+    //             console.error("Failed to fetch sales data");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error fetching sales data", error);
+    //     }
+    // };
+    // useEffect(() => {
+    //     fetchSales(pageIndex, maxItemPerPage);
+    // }, [pageIndex]);
+
     useEffect(() => {
         setSliceSaleData(saleData.slice(pageIndex * maxItemPerPage, pageIndex * maxItemPerPage + maxItemPerPage));
     }, [pageIndex, saleData]);
@@ -120,6 +159,18 @@ function Sales() {
                         {sliceSaleData.map((sale, index) => {
                             return <SaleData sale={sale} key={index} />;
                         })}
+                        {/* <ListWithLoading
+                            isLoading={isLoading}
+                            data={sales}
+                            renderItem={(sale, index) => (
+                                <SaleData
+                                sale={sale}
+                                //id={index}
+                                //onDelete={handleDeleteCustomer}
+                                />
+                            )}
+
+                        /> */}
                     </tbody>
                 </table>
             </div>

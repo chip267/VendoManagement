@@ -18,7 +18,7 @@ class CustomerController {
                     params: { page, limit, name, phoneNumber }
                 }
             );
-            if (response.status === 200) {
+            if (response.status === 200 || response.status === 304) {
                 return {
                     success: true,
                     data: response.data
@@ -56,7 +56,20 @@ class CustomerController {
     async addCustomer(customer) {
         try {
             const response = await apiInstance.post("/api/customers", customer, { withCredentials: true });
-            return response;
+            if (response.status === 200) {
+                return {
+                    success: true,
+                    data: response.data
+                };
+            }
+            else {
+                return {
+                    success: false,
+                    data: null
+                };
+            }
+
+
         } catch (error) {
             return error;
         }
@@ -72,7 +85,19 @@ class CustomerController {
     async deleteCustomer(id) {
         try {
             const response = await apiInstance.delete("/api/customers/" + id, { withCredentials: true });
-            return response;
+            if (response.status === 200) {
+                return {
+                    success: true,
+                    data: response.data
+                };
+            }
+            else {
+                console.log("API: Delete customer failed. Error: ", response);
+                return {
+                    success: false,
+                    data: null
+                };
+            }
         } catch (error) {
             return error;
         }
