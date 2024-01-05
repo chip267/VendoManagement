@@ -33,21 +33,37 @@ function Settings() {
     setIsLoading(true);
 
     if (user) {
-      const response = await EmployeeApiController.getEmployee(user.employeeId);
-      if (response.success) {
-        if (user.role === "admin") {
+      if (EmployeeApiController.getCurrentEmployee() === null) {
+        const response = await EmployeeApiController.getEmployee(user.employeeId);
+        if (response.success) {
+          if (user.role === "admin") {
 
-          let employee = response.data.employee;
-          employee.salary = "999.999.000 VND";
+            let employee = response.data.employee;
+            employee.salary = "999.999.000";
+            setEmployeeInfo(employee);
+            EmployeeApiController.setCurrentEmployee(employee);
+          }
+          else {
+            let employee = response.data.employee;
+            setEmployeeInfo(employee);
+          }
+        }
+      }
+      else {
+        if (user.role === "admin") {
+          let employee = EmployeeApiController.getCurrentEmployee();
+          employee.salary = "999.999.000"
           setEmployeeInfo(employee);
         }
         else {
-          let employee = response.data.employee;
-          employee.salary += " VND";
+          let employee = EmployeeApiController.getCurrentEmployee();
+
           setEmployeeInfo(employee);
         }
       }
+
     }
+
     setIsLoading(false);
   }
   const page = () => {
@@ -67,7 +83,7 @@ function Settings() {
             Name: {employeeInfo ? employeeInfo.name : ""}
           </p>
           <p className={cx("settings-info-salary")}>
-            Salary: {employeeInfo ? employeeInfo.salary : ""}
+            Salary: {employeeInfo ? employeeInfo.salary + " VND" : ""}
           </p>
         </div>
         <button className={cx("logout-btn")} onClick={logOut}>
