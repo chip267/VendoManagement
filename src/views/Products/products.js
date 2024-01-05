@@ -45,13 +45,14 @@ async function initStoreProducts() {
 
 const Products = () => {
   // Option for the type bar.
-  const [selectedOption, setSelectedOption] = useState('null');
+  const [selectedFilterOption, setSelectedFilterOption] = useState('null');
   //For order section
   const [isOrdering, setIsOrdering] = useState(false);
   const [orderCustomerId, setOrderCustomerId] = useState(null);
   //Used to check if customer buy at store,if yes, set order status to  "Delivered"
   const [orderStatus, setOrderStatus] = useState(null);
   //For product (left side)
+  const [isDeletingProduct, setIsDeletingProduct] = useState(false);
   const [loading, setLoading] = useState(false);
   const [storeProducts, setStoreProducts] = useState(() => initStoreProducts());
   const [pageIndex, setPageIndex] = useState(1);
@@ -65,7 +66,7 @@ const Products = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   //Snackbar and other misc
   const { showSnackbar } = useGlobalSnackbar();
-  const { showDialog } = useGlobalConfirmDialog();
+  const { showDialog, hideDialog, setWaitting } = useGlobalConfirmDialog();
   //Currently unused
   const btnTextAnimateClassName = isTransitioning ? cx("state-slide-down-txt") : "";
   //Use api on first render and when page change
@@ -147,6 +148,41 @@ const Products = () => {
     showDialog({
       header: "Delete product",
       message: "Are you sure you want to delete this product?",
+      onConfirm: async () => {
+        setWaitting(true);
+        try {
+          setIsDeletingProduct(true);
+          const response = await ProductApiController.deleteProduct(selectedProduct._id);
+          if (response.success) {
+            console.log("Delete product successfully");
+            showSnackbar("Delete product successfully", "success");
+            //Reset selected product
+            switchProductBorderColor(selectedProduct);
+            setSelectedProduct(null);
+            //Update products
+            await fetchProducts();
+            hideDialog();
+          }
+          else {
+            console.log("Delete product failed");
+            showSnackbar("Delete product failed", "error");
+            hideDialog();
+          }
+        }
+        catch (error) {
+          console.error("Error deleting product:", error);
+          hideDialog();
+        }
+        finally {
+          setIsDeletingProduct(false);
+
+        }
+
+      },
+      onCancel: () => {
+        hideDialog();
+      },
+
     });
   };
   //Make a new order. Add to db on success
@@ -324,7 +360,7 @@ const Products = () => {
   return (
     <div className={cx("container")}>
       <div className={cx("header")}>
-        <h2>Product</h2>
+        <h1>Product</h1>
       </div>
       <div className={cx("btn-bar")}>
         <span className={cx("left-side-btn-group")}>
@@ -367,8 +403,8 @@ const Products = () => {
         {options.map((option) => (
           <button
             key={option.value}
-            onClick={() => setSelectedOption(option)}
-            className={`${cx("selectionItem")} ${option.value === selectedOption.value && selectedOption !== null ? styles.selected : ""
+            onClick={() => setSelectedFilterOption(option)}
+            className={`${cx("selectionItem")} ${option.value === selectedFilterOption.value && selectedFilterOption !== null ? styles.selected : ""
               }`}
           >
             {option.label}
@@ -434,6 +470,7 @@ const Products = () => {
                   addtionalContainerClassName={cx({
                     [cx("state-slide-down")]: isTransitioning,
                   })}
+                  typeOptions={options}
                 />
               )}
             </div>

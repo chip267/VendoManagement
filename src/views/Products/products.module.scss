@@ -7,6 +7,9 @@
   margin-left: 5px;
 }
 
+//Used for product if they are not found in cart
+
+
 .header {
   margin-top: 25px;
   font-size: 24px;
@@ -30,18 +33,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+
 }
 
 
 
 .search-bar {
-  padding: 10px;
-  width: 15%;
-  height: 50%;
+  padding: 15px;
+
+  height: 45px;
   border: 1.1px solid #E2EFE8;
   border-radius: 12px;
   box-sizing: border-box;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 
@@ -95,7 +100,6 @@
 
 .wrapper {
   width: 100%;
-
   display: flex;
 
   .wrapper-left {
@@ -113,7 +117,6 @@
   width: 60%;
   height: 75vh;
   display: flex;
-  margin-top: 20px;
   // justify-content: center;
   // align-items: center;
   //border: 1px solid black;
@@ -131,7 +134,7 @@
 
 .selectionItem {
   padding: 10px;
-  font-size: 14px;
+  font-size: 16px;
   color: #B6CAC0;
   cursor: pointer;
   border: none;
@@ -162,8 +165,8 @@
 
 .productQuantity {
 
-  font-size: 15px;
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: 500;
 
   position: absolute;
   bottom: 10px;
@@ -186,6 +189,7 @@
   border-radius: 10px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  padding: 5px;
   transition: all 0.2s ease-in-out;
 
   &:hover {
@@ -212,7 +216,7 @@
 }
 
 .productType {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 400;
   color: #B6CAC0;
 }
@@ -227,14 +231,14 @@
 //Each product section
 .productName {
   //display: block;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: #0F2319;
 }
 
 .productPrice {
   //display: block;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: #FABC50;
 }
@@ -430,6 +434,7 @@
   font-size: 18px;
   font-weight: 500;
   color: #0F2319;
+  border-radius: 5px;
 }
 
 @keyframes slideDownTxt {
@@ -490,14 +495,14 @@
   align-items: center;
   justify-content: space-between;
   color: #0F2319;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 500;
   line-height: 17px;
 }
 
 .clear {
   padding: 10px;
-  font-size: 18px;
+  font-size: 24px;
   color: #B6CAC0;
   //background-color: red;
   border: none;
@@ -516,11 +521,22 @@
   margin-top: 20px;
 }
 
+.nullItem,
 .item {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
   margin-bottom: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.nullItem {
+  //Override it so that the text is aligned at the start but has the same left padding as the item
+  padding-left: 20px;
+  justify-content: flex-start;
+
 }
 
 .checkbox {
@@ -539,19 +555,20 @@
 
 .name {
   display: block;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: bold;
   color: #0F2319;
 }
 
 .price {
-  display: block;
+  display: inline-flex;
   font-size: 12px;
   font-weight: 500;
   color: #FABC50;
 }
 
 .quantity {
+  font-size: 12px;
   width: 30%;
   display: flex;
   align-items: center;
@@ -606,7 +623,7 @@
     flex-direction: row;
     justify-content: space-between;
     font-weight: 400;
-    font-size: 12px;
+    font-size: 16px;
 
     color: #B6CAC0;
   }
@@ -653,13 +670,13 @@
 }
 
 .btn-add {
-  width: 15%;
-  height: 37px;
+  width: 20%;
+  height: 45px;
   margin-left: 20px;
   background-color: #2C7A51;
   color: #ffffff;
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 500;
   line-height: 20px;
   transition: all 0.2s ease-in-out;
@@ -698,12 +715,14 @@
   align-items: center;
   justify-content: center;
 
-  .btn {
-    width: 200px;
+  button {
+    width: 40%;
     height: 40px;
+
     color: #FFFFFF;
     background-color: #2C7A51;
-    border-radius: 12px;
+    border-radius: 1.5 rem;
+    font-size: 16px;
 
     &:active {
       background-color: #369763;

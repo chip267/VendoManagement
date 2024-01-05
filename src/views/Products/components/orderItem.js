@@ -11,37 +11,45 @@ const OrderItem = ({
     const productData = itemData.product;
     const associatedQuantity = itemData.quantity;
     return (
-        <div key={productData._id}
-            className={styles.item} id={productData._id}>
+        <>
+            {itemData.product ? (
+                <div key={productData._id}
+                    className={styles.item} id={productData._id}>
 
-            <img src={productData.images ? productData.images[0].url : ""} alt="product" className={styles.image} />
-            <div className={cx("order-item-detail")}>
-                <div className={styles.name}>{productData.productName}</div>
-                <div className={styles.price}>{productData.sellPrice} vnd</div>
-            </div>
-            <div className={styles.quantity}>
-                {!preventEdit ? (
-                    <>
-                        <button
-                            className={styles.decrement}
-                            onClick={() => updateQuantity(index, -1)}
-                        >
-                            -
-                        </button>
-                        <p>{associatedQuantity}</p>
+                    <img src={productData.images ? productData.images[0].url : ""} alt="product" className={styles.image} />
+                    <div className={cx("order-item-detail")}>
+                        <div className={styles.name}>{productData.productName}</div>
+                        <div className={styles.price}>{productData.sellPrice} vnd</div>
+                    </div>
+                    <div className={styles.quantity}>
+                        {!preventEdit ? (
+                            <>
+                                <button
+                                    className={styles.decrement}
+                                    onClick={() => updateQuantity(index, -1)}
+                                >
+                                    -
+                                </button>
+                                <p>{associatedQuantity}</p>
 
-                        <button
-                            className={styles.increment}
-                            onClick={() => updateQuantity(index, 1)}
-                        >
-                            +
-                        </button>
-                    </>
-                ) : (
-                    <p>{associatedQuantity}</p>
-                )}
-            </div>
-        </div>
+                                <button
+                                    className={styles.increment}
+                                    onClick={() => updateQuantity(index, 1)}
+                                >
+                                    +
+                                </button>
+                            </>
+                        ) : (
+                            <p>{associatedQuantity}</p>
+                        )}
+                    </div>
+                </div>
+            ) : (
+                <div className={styles.nullItem}>
+                    <p>Product not found</p>
+                </div>
+            )}
+        </>
     )
 
 }

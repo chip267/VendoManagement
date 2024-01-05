@@ -3,8 +3,15 @@ import React, { useState } from "react";
 import classNames from "classnames/bind";
 import styles from "../products.module.scss";
 import { useEffect } from "react";
+import { Select } from "@mui/material";
+import { MenuItem } from "@mui/material";
 const cx = classNames.bind(styles);
-const AddProductForm = ({ addProductHandler, key, addtionalContainerClassName }) => {
+const AddProductForm = ({
+    addProductHandler,
+    key,
+    addtionalContainerClassName,
+    typeOptions = null,
+}) => {
     // Info include: productName, type, brand, manufacturer, countryOrigin, sellPrice, importPrice, quantity, images
     const [productName, setProductName] = useState("");
     const [type, setType] = useState("");
@@ -18,6 +25,20 @@ const AddProductForm = ({ addProductHandler, key, addtionalContainerClassName })
     const [mainImage, setMainImage] = useState(null); // image[0]
     const [otherImages, setOtherImages] = useState([]); // image[1-]
     const [fileError, setFileError] = useState(false);
+    useEffect(() => {
+        if (typeOptions) {
+            //If typeOptions is not null, set type to the first option. If first option is all, set type to the second option
+            if (typeOptions[0].value === "all") {
+                setType(typeOptions[1].value);
+            }
+            else {
+                setType(typeOptions[0].value);
+            }
+        }
+    }, [typeOptions]);
+    useEffect(() => {
+        console.log("Selected type: ", type);
+    }, [type]);
     const handleImageChange = ({ e, isMainImage = false }) => {
         // Other image cant be over 4. Total out at 5 including main image
         if (!isMainImage) {
@@ -49,6 +70,37 @@ const AddProductForm = ({ addProductHandler, key, addtionalContainerClassName })
         }
 
     }, [mainImage, otherImages]);
+    //Set first letter or letter after space to uppercase
+    const capitalize = (str) => {
+        //If str is ssd or hdd return full uppercase
+        if (str === "ssd" || str === "hdd") return str.toUpperCase();
+        let result = "";
+        let words = str.split(" ");
+        words.forEach(word => {
+            result += word[0].toUpperCase() + word.slice(1) + " ";
+        });
+        return result.trim();
+    };
+    //Decapitalize first letter or letter after space for value
+    const decapitalize = (str) => {
+
+        if (str === "SSD" || str === "HDD") {
+            return str.toLowerCase();
+        }
+        let result = "";
+        let words = str.split(" ");
+        words.forEach((word, index) => {
+            if (index === 0) {
+                result += (word.length > 0 ? word[0].toLowerCase() : "") + word.slice(1);
+            } else {
+                result += " " + word[0].toLowerCase() + word.slice(1);
+            }
+        });
+        return result.trim();
+    };
+    const handleTypeChange = (e) => {
+        setType(capitalize(e.target.value));
+    }
     return (
         <div className={cx("add-product-form") + " " + addtionalContainerClassName} key={key}>
             <div className={cx("add-product-title-container")}>
@@ -64,7 +116,20 @@ const AddProductForm = ({ addProductHandler, key, addtionalContainerClassName })
             </div>
             <div className={cx("form-line")}>
                 <label htmlFor="type">Type</label>
-                <input type="text" id="type" onChange={(e) => setType(e.target.value)} />
+                <Select
+                    id="type"
+                    value={decapitalize(type)}
+                    onChange={(e) => handleTypeChange(e)}
+                    className={cx("type-select")}
+                >
+                    {typeOptions && typeOptions.map((option, index) => {
+                        //If option value is all, ignore it
+                        if (option.value === "all") return null;
+
+                        return <MenuItem key={index} value={option.value}>{option.label}</MenuItem>
+                    })}
+                </Select>
+
             </div>
             <div className={cx("form-line")}>
                 <label htmlFor="brand">Brand</label>
