@@ -132,7 +132,7 @@ function Customers() {
   return (
     <div className={cx("container")}>
       <div className={cx("header")}>
-        <h2>Customer</h2>
+        <h1>Customer</h1>
       </div>
       <div className={cx("mini-home-logo")}>
         <button>
