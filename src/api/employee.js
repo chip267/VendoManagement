@@ -3,6 +3,7 @@ import apiInstance from ".";
 
 
 class EmployeeContorller {
+    currentEmployee = null;
     async getEmployees({ limit = 10, page = 1, sortBy = "name", sort = "asc", search = "" } = {}) {
         try {
             const response = await apiInstance.get("/api/employees", { withCredentials: true });
@@ -40,6 +41,13 @@ class EmployeeContorller {
         } catch (error) {
             return error;
         }
+    }
+    //set current employee
+    setCurrentEmployee(employee) {
+        this.currentEmployee = employee;
+    }
+    getCurrentEmployee() {
+        return this.currentEmployee;
     }
     async addEmployee(employee) {
         try {

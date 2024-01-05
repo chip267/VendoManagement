@@ -1,8 +1,8 @@
 
 import apiInstance from ".";
+import EmployeeApiController from "./employee";
 //UserController has user that is in sync with user context
 //Used for path tracking and other things. 
-//
 class UserController {
     constructor() {
         this.user = null;
@@ -43,6 +43,7 @@ class UserController {
             const response = await apiInstance.post("/api/logout", {}, { withCredentials: true });
             if (response.status === 200) {
                 this.user = null;
+                EmployeeApiController.setCurrentEmployee(null);
                 return {
                     success: true,
                     data: null
