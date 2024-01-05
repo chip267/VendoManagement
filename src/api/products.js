@@ -69,7 +69,24 @@ class ProductController {
     async deleteProduct(id) {
         try {
             const response = await apiInstance.delete("/api/products/" + id, { withCredentials: true });
-            return response;
+            if (response.status === 200) {
+                return {
+                    success: true,
+                    data: response.data
+                };
+            }
+            else if (response.status === 404) {
+                console.log("Product not found");
+                return {
+                    success: false,
+                    data: null
+                };
+            } else {
+                return {
+                    success: false,
+                    data: null
+                };
+            }
         } catch (error) {
             return error;
         }
