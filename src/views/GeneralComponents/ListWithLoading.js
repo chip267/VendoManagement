@@ -16,7 +16,11 @@ const ListWithLoading = ({
                 <div style={{
                     width: "100%"
                 }} className='flex justify-center items-center py-4'>
-                    <CircularProgress />
+                    <CircularProgress
+                        sx={{
+                            color: "#2C7A51"
+                        }}
+                    />
                 </div>
             ) : data?.length > 0 ? (
                 data.map((item, index) => renderItem(item, index))

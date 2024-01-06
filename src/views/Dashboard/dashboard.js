@@ -1,12 +1,45 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styles from './dashboard.module.scss';
 import classNames from "classnames/bind";
 import "@fontsource/lexend";
 import { IMG_Logo } from "../../assets/images";
 import BestSellingItem from "./components/bestSellingItem";
+import { Chart as ChartJS, defaults } from "chart.js/auto";
+import { Bar } from "react-chartjs-2";
+import sourceData from "../../Data/sourceData.json";
 const imgLogoUrl = IMG_Logo;
+defaults.maintainAspectRatio = false; 
+defaults.responsive = true;
+
+defaults.plugins.title.display = true;
+defaults.plugins.title.align = "start";
+defaults.plugins.title.font.size = 20;
+defaults.plugins.title.color = "black";
+
 const cx = classNames.bind(styles);
 function Dashboard() {
+
+  // const chartRef = useRef(null);
+
+  // useEffect(() => {
+  //   if (chartRef.current) {
+  //     chartRef.current.destroy();
+  //   }
+
+  //   chartRef.current = new Chart(document.getElementById("barChart"), {
+  //     type: "bar",
+  //     data: data,
+  //     options: options
+  //   });
+
+  //   return () => {
+  //     if (chartRef.current) {
+  //       chartRef.current.destroy();
+  //     }
+  //   };
+  // }, []);
+
+
   return (
     <div className={cx("container")}>
       <div className={cx("header")}>
@@ -79,8 +112,46 @@ function Dashboard() {
                   </td>
                 </tr>
                 <tr>
-
+                  <div className={cx("bar-chart")}>
+                    <Bar 
+                          data={{
+                            labels: sourceData.map((data) => data.label),
+                            datasets: [
+                              {
+                                label: "Count",
+                                data: sourceData.map((data) => data.value),
+                                backgroundColor: [
+                                  "#2C7A51",
+                                  "#FABC50",
+                                ],
+                                borderRadius: 10,
+                              },
+                            ],
+                          }}
+                          options={{
+                            plugins: {
+                              title: {
+                                //text: "",
+                                display: false,
+                              },
+                            },
+                            scales: {
+                              x: {
+                                grid: {
+                                  display: false
+                                }
+                              },
+                              y: {
+                                grid: {
+                                  display: false
+                                }
+                              }
+                            }
+                          }}
+                        />
+                  </div>
                 </tr>
+                
               </table>
             </div>
 
