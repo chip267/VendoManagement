@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from './dashboard.module.scss';
 import classNames from "classnames/bind";
 import "@fontsource/lexend";
@@ -18,7 +18,6 @@ defaults.plugins.title.color = "black";
 
 const cx = classNames.bind(styles);
 function Dashboard() {
-
   // const chartRef = useRef(null);
 
   // useEffect(() => {
@@ -38,8 +37,6 @@ function Dashboard() {
   //     }
   //   };
   // }, []);
-
-
   return (
     <div className={cx("container")}>
       <div className={cx("header")}>
@@ -106,9 +103,9 @@ function Dashboard() {
                     <a>Retail overview</a>
                   </td>
                   <td className={cx("right")}>
-                    <button className={cx("in-chart-sale")}>Sale</button>
+                    {/* <button className={cx("in-chart-sale")}>Sale</button>
                     <button className={cx("in-chart-product")}>Product</button>
-                    <button className={cx("in-chart-customer")}>Customer</button>
+                    <button className={cx("in-chart-customer")}>Customer</button> */}
                   </td>
                 </tr>
                 <tr>
@@ -118,7 +115,7 @@ function Dashboard() {
                             labels: sourceData.map((data) => data.label),
                             datasets: [
                               {
-                                label: "Count",
+                                //label: "Order",
                                 data: sourceData.map((data) => data.value),
                                 backgroundColor: [
                                   "#2C7A51",
@@ -134,6 +131,9 @@ function Dashboard() {
                                 //text: "",
                                 display: false,
                               },
+                              legend: {
+                                display: false,
+                              }
                             },
                             scales: {
                               x: {
@@ -143,8 +143,9 @@ function Dashboard() {
                               },
                               y: {
                                 grid: {
-                                  display: false
-                                }
+                                  display: true
+                                },
+                                
                               }
                             }
                           }}
@@ -153,6 +154,7 @@ function Dashboard() {
                 </tr>
                 
               </table>
+              
             </div>
 
           </div>
