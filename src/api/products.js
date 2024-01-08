@@ -8,12 +8,25 @@ class ProductController {
     async getProducts({
         page = 1,
         limit = 10,
-        nameFilter = null,
-        typeFilter = null,
+        productName = null,
+        type = null,
         sellPriceFilter = null,
     }) {
         try {
-            const response = await apiInstance.get("/api/products", { withCredentials: true, params: { page, limit, nameFilter, typeFilter, sellPriceFilter } });
+            //If any of the params is null, it will be ignored and set to null
+            if (type)
+                if (type.toLowerCase() === "all") type = null;
+
+            const response = await apiInstance.get("/api/products", {
+                withCredentials: true, params: {
+                    page,
+                    limit,
+                    productName,
+                    type,
+                    sellPriceFilter
+                }
+            });
+
             if (response.status === 200) {
                 return {
                     success: true,
@@ -58,9 +71,43 @@ class ProductController {
             return error;
         }
     }
-    async updateProduct(product) {
+    async updateProduct({
+        _id,
+        productName = null,
+        type = null,
+        sellPrice = null,
+        description = null,
+        productAction = null,
+        productActionQuantity = null,
+    }) {
+        //Quantity cannot simply be changed
+        //To add, must supply field: productAction[action] = "add" || "reduce" and productAction[quantity] = number
+        if (productAction) {
+            //Check if is add or reduce
+            if (productAction === "add" || productAction === "reduce") {
+                productAction = {
+                    action: productAction,
+                    quantity: productActionQuantity
+                };
+            }
+            else {
+                productAction = null;
+
+            }
+        }
+        const updateData = {
+            productName,
+            type,
+            sellPrice,
+            description,
+            productAction
+        };
+        //Remove null
+        Object.keys(updateData).forEach(key => updateData[key] === null && delete updateData[key]);
         try {
-            const response = await apiInstance.put("/api/products/" + product.id, product, { withCredentials: true });
+            const response = await apiInstance.patch("/api/products/" + _id,
+                updateData
+                , { withCredentials: true });
             return response;
         } catch (error) {
             return error;

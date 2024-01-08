@@ -1,9 +1,20 @@
 import apiInstance from ".";
 
 class OrderController {
-    async getOrders({ page = 1, limit = 10, sortBy = "" }) {
+    async getOrders({
+        page = 1,
+        limit = 10,
+        sortBy = null,
+        customerName = null,
+        customerPhoneNumber = null,
+        employeeName = null,
+    }) {
         try {
-            const response = await apiInstance.get("/api/orders", { withCredentials: true, params: { page, limit, sortBy } });
+            const response = await apiInstance.get("/api/orders", {
+                withCredentials: true, params: {
+                    page, limit, sortBy, customerName, customerPhoneNumber, employeeName
+                }
+            });
             if (response.status === 200) {
                 return {
                     success: true,

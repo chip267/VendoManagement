@@ -10,7 +10,7 @@ class EmployeeContorller {
             phoneNumber = null,
         }) {
         try {
-            console.log("name is " + name);
+
             const response = await apiInstance.get("/api/employees", {
                 params: {
                     limit: limit,
