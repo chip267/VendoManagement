@@ -10,6 +10,7 @@ export const useUserContext = () => useContext(UserContext)
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [paginationLimit, setPaginationLimit] = useState(3);
     //Called every time user changes
     useEffect(() => {
         if (!user && !UserApiController.user) {
@@ -44,7 +45,9 @@ export const UserProvider = ({ children }) => {
     }
     const value = {
         user,
-        setUser
+        setUser,
+        paginationLimit,
+        setPaginationLimit
     };
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
