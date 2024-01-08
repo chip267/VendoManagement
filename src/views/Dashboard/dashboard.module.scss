@@ -9,7 +9,7 @@
 
 .header {
     padding: 20px;
-    color: #0F2319;
+    color: #2C7A51;
     font-weight: 600;
     size: 20px;
     line-height: 20px;
@@ -172,6 +172,13 @@ select {
 .table-title {
     height: 6%;
     margin: 20px;
+
+    h3 {
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: #342e37;
+
+    }
 }
 
 .bs-table {
@@ -191,7 +198,7 @@ select {
     text-align: start;
     height: 50px;
     font-weight: 400;
-    font-size: 12px;
+    font-size: 1rem;
     line-height: 20px;
     color: #B6CAC0;
 
@@ -214,7 +221,8 @@ select {
     width: 100%;
     margin-top: 12px;
     font-weight: 400;
-    font-size: 10px;
+    font-size: 0.8rem;
+
     line-height: 20px;
     text-align: center;
 
@@ -222,7 +230,7 @@ select {
         width: 35%;
     }
 
-    .price {
+    .sold-count {
         width: 20%;
     }
 
@@ -233,11 +241,13 @@ select {
         align-items: center;
         justify-content: center;
         position: relative;
+
+
     }
 
     .product .img-container {
         position: absolute;
-        left: 10%;
+        left: 5%;
         width: 10%;
         display: flex;
         gap: 10px;
@@ -256,6 +266,11 @@ select {
     }
 }
 
+.loading-chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 
 // :root {

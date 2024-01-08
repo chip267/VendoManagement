@@ -42,7 +42,7 @@ const InfoHeader = (
                 </div>
                 <span className={cx("text")}>
                     <p>Total products</p>
-                    <h3>{filterThousands(info.products)}</h3>
+                    <h3>{filterThousands(info.totalProduct)}</h3>
                 </span>
             </li>
             <li>
@@ -53,7 +53,7 @@ const InfoHeader = (
                 </div>
                 <span className={cx("text")}>
                     <p>Total customers</p>
-                    <h3>{filterThousands(info.customers)}</h3>
+                    <h3>{filterThousands(info.totalCustomer)}</h3>
                 </span>
             </li>
             <li>
@@ -64,7 +64,7 @@ const InfoHeader = (
                 </div>
                 <span className={cx("text")}>
                     <p>Total sales</p>
-                    <h3>{filterThousands(info.sales)}</h3>
+                    <h3>{filterThousands(info.totalProfit)}</h3>
                 </span>
             </li>
         </div>

@@ -6,6 +6,7 @@ const cx = classNames.bind(styles);
 
 const OptionsHeader = ({
     rightSideOptions,
+    rightSideOnChange = null,
     leftSideOptions = null
 }) => {
     return (
@@ -15,9 +16,11 @@ const OptionsHeader = ({
 
             </td>
             <td className={cx("opt-right")}>
-                <select>
+                <select onChange={(e) => rightSideOnChange(e.target.value)}>
                     {rightSideOptions.map((option, index) => {
-                        return <option key={index} value={option.value}>{option.text}</option>
+                        return <option key={index} value={option.value
+                        }
+                        >{option.text}</option>
                     }
                     )}
                 </select>
