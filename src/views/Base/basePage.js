@@ -32,6 +32,12 @@ const BasePage = () => {
         showSnackbar,
         hideSnackbar,
     };
+    useEffect(() => {
+        document.title = 'Vendo Management System';
+        return () => {
+            document.title = 'React App';
+        };
+    }, [])
 
 
     return (
