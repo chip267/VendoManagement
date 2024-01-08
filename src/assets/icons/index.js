@@ -4,3 +4,6 @@ export { default as IC_Product } from "./IC_Product_path.svg";
 export { default as IC_Sales } from "./IC_Sales_path.svg";
 export { default as IC_Setting } from "./IC_Settings_path.svg";
 export { default as IC_Delete } from "./IC_Delete_path.svg";
+export { default as IC_Refresh } from "./IC_Refresh_path.svg";
+export { default as IC_Print } from "./IC_Print_path.svg";
+export { default as IC_Employee } from "./IC_Employee_path.svg";
