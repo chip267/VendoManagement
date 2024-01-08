@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { UserApiController } from "../../api/user";
 import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../../context/UserContext";
 import classNames from "classnames/bind";
 import styles from "./settings.module.scss";
 import { List } from "@mui/material";
+import { Select } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import { CircularProgress } from "@mui/material"
 import EmployeeApiController from "../../api/employee";
+import { useUserContext } from "../../context/UserContext";
 const cx = classNames.bind(styles);
 
 function Settings() {
@@ -14,6 +16,7 @@ function Settings() {
   const Navigation = useNavigate();
   const [isLoading, setIsLoading] = React.useState(true);
   const [employeeInfo, setEmployeeInfo] = React.useState(null);
+  const { paginationLimit, setPaginationLimit } = useUserContext();
   //Log out 
   const logOut = async () => {
     setIsLoading(true);
@@ -29,6 +32,20 @@ function Settings() {
   useEffect(() => {
     fetchData();
   }, []);
+  const formatPosition = (position) => {
+    if (position === "admin") {
+      return "Admin";
+    }
+    else if (position === "sale") {
+      return "Front sale";
+    }
+    else if (position === "warehouse") {
+      return "Warehouse staff";
+    }
+    else {
+      return "Unknown";
+    }
+  }
   const fetchData = async () => {
     setIsLoading(true);
 
@@ -79,12 +96,42 @@ function Settings() {
           <p className={cx("settings-info-role")}>
             Role: {user ? user.role : ""}
           </p>
+          <p className={cx("settings-info-role")}>
+            Position : {employeeInfo ? formatPosition(employeeInfo.position) : ""}
+          </p>
           <p className={cx("settings-info-employee")}>
             Name: {employeeInfo ? employeeInfo.name : ""}
           </p>
           <p className={cx("settings-info-salary")}>
             Salary: {employeeInfo ? employeeInfo.salary + " VND" : ""}
           </p>
+        </div>
+
+        <div className={cx("settings-pagination")}>
+          <p className={cx("settings-pagination-title")}>
+            Results per page:
+          </p>
+          <div className={cx("settings-pagination-select")}>
+            <List>
+              <Select
+                onChange={(event) => {
+                  setPaginationLimit(event.target.value);
+                }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={paginationLimit}
+                label="Age"
+              >
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={6}>6</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
+              </Select>
+            </List>
+
+          </div>
         </div>
         <button className={cx("logout-btn")} onClick={logOut}>
           Log out

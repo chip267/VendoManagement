@@ -1,39 +1,62 @@
+/* settingsStyles.module.css */
+
 .settings-container {
+    background-color: #EBFAED;
+    padding: 20px;
+    margin-right: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
     font-family: 'Lexend', sans-serif;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
 }
 
 .settings-title {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-    display: block;
-    color: #0F2319;
-    //Lexend font
-
+    color: #2C7A51;
 }
 
 .settings-info {
-    //Container
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-left: 1rem;
+    margin-bottom: 20px;
+}
 
+.settings-info p {
+    color: #333;
+    margin: 5px 0;
+}
+
+.settings-pagination-title {
+    color: #2C7A51;
+}
+
+.settings-pagination-select {
+    margin-top: 10px;
+}
+
+.settings-pagination-select select {
+    background-color: #EBFAED;
+    color: #2C7A51;
+    border: 1px solid #2C7A51;
+    border-radius: 5px;
+    padding: 8px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.settings-pagination-select select:hover,
+.settings-pagination-select select:focus {
+    border-color: #2C7A51;
 }
 
 .logout-btn {
-    //Container  
-    width: 20%;
-    max-width: 10rem;
-    margin-left: 1rem;
-    margin-top: 1rem;
-    border-radius: 0.5rem;
-    //Opposite red
-    background-color: #E63946;
     //Red
-    color: #F1FAEE;
+    background-color: #E74C3C;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
 
+.logout-btn:hover {
+    background-color: #C0392B;
 }
