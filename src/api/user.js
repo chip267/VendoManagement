@@ -1,6 +1,7 @@
 
 import apiInstance from ".";
 import EmployeeApiController from "./employee";
+import StatisticAPIController from "./statistic";
 //UserController has user that is in sync with user context
 //Used for path tracking and other things. 
 class UserController {
@@ -44,6 +45,7 @@ class UserController {
             if (response.status === 200) {
                 this.user = null;
                 EmployeeApiController.setCurrentEmployee(null);
+                StatisticAPIController.clearCache();
                 return {
                     success: true,
                     data: null
