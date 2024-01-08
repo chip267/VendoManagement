@@ -7,9 +7,13 @@ import classNames from 'classnames/bind';
 import OrderItem from '../../Products/components/orderItem';
 import SaleOrderInformation from './saleOrderInformation';
 import CustomerSearchbar from '../../Products/components/customerSearchbar';
-
+import PrintSaleOrderInformation from './printSaleOrderInformation';
+import ReactToPrint from 'react-to-print';
+import PrintSaleDetail from './printSaleDetail';
+import { useRef } from 'react';
 import { Select } from "@mui/material";
 import { MenuItem } from "@mui/material";
+import { IMG_Logo } from '../../../assets/images';
 const cx = classNames.bind(styles);
 
 const SaleDetail = ({
@@ -18,11 +22,14 @@ const SaleDetail = ({
     deleteSale = null, //cancel sale
     onSubmit = null,
     taxRate = 0.03,
+    printMode = false,
 }) => {
     const [orderCustomer, setOrderCustomer] = useState(sale.customerId ? sale.customerId._id : null);
     const [products, setProducts] = useState(sale.orderDetails.map((item) => { return { product: { ...item }.productId, quantity: item.quantity } }));
     //Cant change employee who made the order
     const [orderStatus, setOrderStatus] = useState(sale.status);
+    const componentRef = useRef();
+
     useEffect(() => {
         console.log("New information for update: ");
         console.log("Customer: ", orderCustomer);
@@ -110,57 +117,171 @@ const SaleDetail = ({
             updateSale(saleDataToUpdate);
         }
     }
+
+
     const handleCancel = () => {
         console.log("Submit");
     }
+    const toShorterName = (name) => {
+        const num = 10;
+        if (name.length > num) {
+            return name.slice(0, num) + "...";
+        }
+        else {
+            return name;
+        }
+    }
+
     return (
-        <div className={cx('sale-detail-form')}
-            key={sale.id}>
-            <div className={styles.heading}>
-                <h1>Sale Details</h1>
+        <div>
+            {!printMode &&
+                (
+                    <div className={cx('sale-detail-form')}
+                        key={sale.id}>
+                        <div className={styles.heading}>
+                            <h1 >Sale Details</h1>
+                            <div className={styles.buttons}>
 
-            </div>
-            <div className={styles.items}>
-                {products
-                    .map((item, index) => (
-                        <OrderItem
-                            key={index}
-                            index={index}
-                            itemData={{ product: item.product, quantity: item.quantity }}
-                            updateQuantity={updateQuantity}
-                            preventEdit={sale.status === "Delivered" || sale.status === "Cancelled"}
+                                <button className={cx('btn')} onClick={handleCancel}>Cancel</button>
+                            </div>
+                        </div>
+                        <div className={styles.items}>
+                            {products
+                                .map((item, index) => (
+                                    <OrderItem
+                                        key={index}
+                                        index={index}
+                                        itemData={{ product: item.product, quantity: item.quantity }}
+                                        updateQuantity={updateQuantity}
+                                        preventEdit={sale.status === "Delivered" || sale.status === "Cancelled"}
+                                    />
+                                ))}
+                        </div>
+                        <div className={cx('customer-search-bar')}>
+                            {sale.status === "Delivered" || sale.status === "Cancelled"
+                                ? (
+                                    <div className={cx('customer-info')}>
+                                        <div>
+                                            <span className={cx('customer-label')}>
+                                                Customer: </span>
+
+                                            <span className={cx('customer-name')}>
+                                                {sale.customerId ? sale.customerId.name : "No customer found"} </span>
+
+                                        </div>
+
+                                    </div>
+                                ) : (
+                                    <CustomerSearchbar
+                                        setOrderCustomer={setOrderCustomer}
+                                        defaultCustomer={sale.customerId ? sale.customerId : null}
+                                    />
+                                )}
+                        </div>
+                        <SaleOrderInformation
+                            order={sale}
+                            taxRate={taxRate}
+                            submitButton={SubmitButton(onSubmit)}
+                            setStatusFromParent={setOrderStatus}
                         />
-                    ))}
-            </div>
-            <div className={cx('customer-search-bar')}>
-                {sale.status === "Delivered" || sale.status === "Cancelled"
-                    ? (
-                        <div className={cx('customer-info')}>
-                            <div>
-                                <span className={cx('customer-label')}>
-                                    Customer: </span>
 
-                                <span className={cx('customer-name')}>
-                                    {sale.customerId ? sale.customerId.name : "No customer found"} </span>
+                    </div >
+                )
+            }
+            {
+                printMode && (
+                    <>
+
+                        <div className={cx('sale-detail-form')} ref={componentRef}
+                            style={{ height: "60vh" }}
+                            key={sale.id}>
+                            <div className={cx('heading-print')}>
+                                <img src={IMG_Logo} alt="logo" className={styles.logo} />
+
+                                <h1
+                                >Sale Details</h1>
 
                             </div>
+                            <div className={styles.items}>
+                                {products
+                                    .map((item, index) => (
+                                        //Display name , sellPrice and quantity
+                                        <div className={cx('item-print')} key={index}>
+                                            <div className={cx('item-name')}>
+                                                {item.product.productName}
+                                            </div>
 
-                        </div>
-                    ) : (
-                        <CustomerSearchbar
-                            setOrderCustomer={setOrderCustomer}
-                            defaultCustomer={sale.customerId ? sale.customerId : null}
+
+                                            <div className={cx('item-print-row')}>
+
+                                                <div className={cx('item-price')}>
+                                                    Price: {item.product.sellPrice}
+                                                </div>
+                                                <div className={cx('item-quantity')}>
+                                                    Quantity: {item.quantity}
+                                                </div>
+                                                <div className={cx('item-total-unit')}>
+                                                    Total: {item.product.sellPrice * item.quantity}
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    ))}
+                            </div>
+                            <div
+                                style={{ width: "100%", height: "1px", backgroundColor: "black", marginBottom: "10px" }}
+                            ></div>
+
+                            <div className={cx('customer-search-bar')}>
+                                <div className={cx('customer-info-print')}>
+                                    <div>
+                                        <span className={cx('customer-label')}>
+                                            Customer: </span>
+
+                                        <span className={cx('customer-name')}>
+                                            {sale.customerId ? sale.customerId.name : "No customer found"} </span>
+
+                                    </div>
+                                    <div>
+                                        <span className={cx('customer-label')}>
+                                            Employee: </span>
+
+                                        <span className={cx('customer-name')}>
+                                            {sale.employeeId ? sale.employeeId.name : "No employee found"} </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <PrintSaleOrderInformation
+                                order={sale}
+                                taxRate={taxRate}
+                                setStatusFromParent={setOrderStatus}
+                            />
+                        </div >
+
+                    </>
+
+
+                )
+            }
+            {
+                printMode && (
+                    <div className={cx('print-btn-container')}>
+                        <ReactToPrint
+                            trigger={() => <button className={cx('print-btn')}
+                            >Print</button>}
+                            content={() => componentRef.current}
                         />
-                    )}
-            </div>
-            <SaleOrderInformation
-                order={sale}
-                taxRate={taxRate}
-                submitButton={SubmitButton(onSubmit)}
-                setStatusFromParent={setOrderStatus}
-            />
+                    </div>
+
+                )
+            }
         </div >
+
     );
 };
+
+
+
 
 export default SaleDetail;

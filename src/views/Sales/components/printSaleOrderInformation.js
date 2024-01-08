@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import styles from "../sales.module.scss";
 import classNames from "classnames/bind";
 const cx = classNames.bind(styles);
-const SaleOrderInformation = ({
+const PrintSaleOrderInformation = ({
     order,
     taxRate,
     submitButton,
@@ -65,44 +65,11 @@ const SaleOrderInformation = ({
                 </label>
                 <label className={cx("status")}>
                     <label>Status:</label>
-                    {order.status !== "Delivered" && order.status !== "Cancelled"
-                        ? (
-                            <Select
-                                className={cx("status-" + orderStatus.toLowerCase())}
-                                value={orderStatus}
-                                onChange={onStatusChange}
-                            >
-                                <MenuItem
-                                    value="Pending">Pending</MenuItem>
-                                <MenuItem
-                                    value="Delivered">Delivered</MenuItem>
-                                <MenuItem
-                                    value="Cancelled">Cancelled</MenuItem>
-                            </Select>
-                        )
-                        : (
-                            <>
-                                {orderStatus === "Delivered" ? (
-                                    <label className={cx("label-status-delivered")}>
-                                        {orderStatus}
-                                    </label>
-                                ) : (
-                                    <label className={cx("label-status-cancelled")}>
-                                        {orderStatus}
-                                    </label>
-                                )}
-
-                            </>
-                        )}
+                    <div style={{ color: "black" }}>
+                        {orderStatus}
+                    </div>
                 </label>
-                {orderStatus === "Delivered" && (
-                    <label className={cx("label-profit")}>
-                        Profit:
-                        <label>{order.profit.toLocaleString()}</label>
-                    </label>
-                )}
 
-                {submitButton}
             </div>
 
         </div>
@@ -110,4 +77,4 @@ const SaleOrderInformation = ({
     );
 }
 
-export default SaleOrderInformation;
+export default PrintSaleOrderInformation;

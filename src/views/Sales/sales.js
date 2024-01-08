@@ -14,34 +14,41 @@ import { CircularProgress } from "@mui/material";
 import OrderApiController from "../../api/order";
 import Order from "../../models/sale";
 import SaleDetail from "./components/saleDetail";
+import { IC_Print } from "../../assets/icons";
+import { useUserContext } from "../../context/UserContext";
 const cx = classNames.bind(styles);
+const defaultPage = 0;
+
 let totalCount = 0;
-const limitPerPage = 3;
-const defaultPage = 1;
-const initSales = async () => {
-    const response = await OrderApiController.getOrders({ page: defaultPage + 1, limit: limitPerPage });
-    if (response.success) {
-        let results = response.data.results;
-        const orderObjects = results.map((item) => new Order({
-            ...item
-        }));
-        totalCount = response.data.totalDocuments;
-        return orderObjects;
-    }
-    return [];
-}
+// const initSales = async () => {
+//     const response = await OrderApiController.getOrders({ page: defaultPage + 1, limit: paginationLimit });
+//     if (response.success) {
+//         let results = response.data.results;
+//         const orderObjects = results.map((item) => new Order({
+//             ...item
+//         }));
+//         totalCount = response.data.totalDocuments;
+//         return orderObjects;
+//     }
+//     return [];
+// }
+
 function Sales() {
+
     const [pageIndex, setPageIndex] = useState(0);
     //sale data api go here
-    const [saleData, setSaleData] = useState(() => initSales());
+    const [saleData, setSaleData] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [selectedSaleDetail, setSelectedSaleDetail] = useState(null);
+    const [printMode, setPrintMode] = useState(false);
     const [showSaleDetail, setShowSaleDetail] = useState(false);
     const { showDialog, hideDialog } = useGlobalConfirmDialog();
+    const { paginationLimit } = useUserContext();
     const { showSnackbar } = useGlobalSnackbar();
+
     useEffect(() => {
-        fetchSaleData(pageIndex, limitPerPage);
+        fetchSaleData(pageIndex, paginationLimit);
         console.log("Sale data: ", saleData);
     }, [pageIndex]);
     useEffect(() => {
@@ -56,17 +63,26 @@ function Sales() {
         console.log("Show sale detail: ", showSaleDetail);
     }, [selectedSaleDetail]);
 
-    const fetchSaleData = async (pageIndex = defaultPage, maxItemPerPage = limitPerPage) => {
+    const fetchSaleData = async (
+        pageIndex = defaultPage,
+        maxItemPerPage = paginationLimit,
+        customerName = null,
+        employeeName = null,
+        customerPhoneNumber = null,
+    ) => {
         setIsFetching(true);
         const response = await OrderApiController.getOrders({
             page: pageIndex + 1,
             limit: maxItemPerPage,
             sortBy: "",
+            customerName,
+            employeeName,
+            customerPhoneNumber
         })
         if (response.success) {
             //print each sale as order class
             setSaleData(response.data.results.map((item) => new Order({ ...item })));
-            totalCount = response.data.totalDocuments;
+            totalCount = response.data.totalFilterCount;
         }
         setIsFetching(false);
     }
@@ -112,7 +128,7 @@ function Sales() {
                 const response = await OrderApiController.updateOrder(filteredUpdateInfo);
                 if (response.success) {
                     hideDialog();
-                    fetchSaleData(pageIndex, limitPerPage);
+                    fetchSaleData(pageIndex, paginationLimit);
                     if (updateInfo.status !== "Cancelled")
                         showSnackbar("Sale updated successfully", "success");
                     else {
@@ -132,6 +148,9 @@ function Sales() {
         });
 
 
+    }
+    const togglePrintMode = () => {
+        setPrintMode(!printMode);
     }
     const switchSaleBorder = (sale) => {
         if (!sale) {
@@ -162,6 +181,63 @@ function Sales() {
         }
 
     }
+    //Search using customer name, phone number or employee name (use E: as prefix
+
+    const handleSaleSearch = async (event) => {
+        //If has E: prefix, search by employee name
+
+        //If not, search for customer phoneNumber if it is a number. Else, search by customer name
+        const searchValue = event.target.value;
+        const hasPrefix = searchValue.startsWith("E:");
+        if (hasPrefix) {
+            //Search by employee name
+            setIsFetching(true);
+            const response = await OrderApiController.getOrders({
+                page: pageIndex + 1,
+                limit: paginationLimit,
+                employeeName: searchValue.substring(2),
+            })
+            if (response.success) {
+                //print each sale as order class
+                setSaleData(response.data.results.map((item) => new Order({ ...item })));
+                totalCount = response.data.totalFilterCount;
+            }
+            setIsFetching(false);
+
+
+        }
+        else {
+            setIsFetching(true);
+            const isNumber = !isNaN(searchValue);
+            if (isNumber) {
+
+                const response = await OrderApiController.getOrders({
+                    page: pageIndex + 1,
+                    limit: paginationLimit,
+                    customerPhoneNumber: searchValue,
+                })
+                if (response.success) {
+                    //print each sale as order class
+                    setSaleData(response.data.results.map((item) => new Order({ ...item })));
+                    totalCount = response.data.totalFilterCount;
+                }
+
+            }
+            else {
+                const response = await OrderApiController.getOrders({
+                    page: pageIndex + 1,
+                    limit: paginationLimit,
+                    customerName: searchValue,
+                })
+                if (response.success) {
+                    //print each sale as order class
+                    setSaleData(response.data.results.map((item) => new Order({ ...item })));
+                    totalCount = response.data.totalFilterCount;
+                }
+            }
+            setIsFetching(false);
+        }
+    }
     return (
         <div className={cx("container")}>
             <div className={cx("header")}>
@@ -169,13 +245,13 @@ function Sales() {
             </div>
             <div className={cx("btn-bar")}>
                 <span>
-                    <input className={cx("search-bar")} type="text number" placeholder="Search" />
+                    <input className={cx("search-bar")} type="text number" placeholder="Phone number, name ,..."
+                        onChange={handleSaleSearch}
+                    />
                 </span>
                 <span className={cx("btn-setting")}>
-                    <button>
-                        <svg className={cx("sliders-logo")} xmlns="http://www.w3.org/2000/svg" height="17" width="17" viewBox="0 0 512 512">
-                            <path opacity="1" fill="#1E3050" d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
-                        </svg>
+                    <button disabled={selectedSaleDetail === null} onClick={togglePrintMode}>
+                        <img src={IC_Print} alt="print" />
                     </button>
                 </span>
             </div>
@@ -219,7 +295,7 @@ function Sales() {
                         </table>
                         <Pagination
                             className={cx("pagination")}
-                            count={Math.ceil(totalCount / limitPerPage)}
+                            count={Math.ceil(totalCount / paginationLimit)}
                             onChange={(event, value) => { setPageIndex(value - 1); }}
                             variant="outlined"
                             shape="rounded"
@@ -239,7 +315,7 @@ function Sales() {
                     {showSaleDetail && <SaleDetail
                         sale={selectedSaleDetail}
                         updateSale={updateSelectedSale}
-
+                        printMode={printMode}
                     />}
                 </div>
             </div>

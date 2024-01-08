@@ -13,7 +13,9 @@
     font-size: 20px;
     line-height: 20px;
     font-weight: 500;
-    color: #0F2319;
+    color: #2C7A51 //Cancel and print button. Move to right
+
+
 }
 
 .btn-bar {
@@ -23,7 +25,7 @@
 
 .search-bar {
     padding: 10px;
-    width: 217px;
+    width: 220px;
     height: 37px;
     border: 1.1px solid #E2EFE8;
     border-radius: 12px;
@@ -76,6 +78,8 @@
     .label-status {
         padding-left: 14px;
     }
+
+
 
     .status {
         .status-delivered {
@@ -189,6 +193,116 @@ tbody .avatar {
     transition: all 0.3s ease-in-out;
 }
 
+//Print
+.print-btn-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.print-btn {
+    width: 90%;
+    height: 37px;
+    background-color: #2C7A51;
+    color: #ffffff;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+
+
+}
+
+.customer-info-print {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #0F2319;
+    margin-top: 20px;
+
+    div {
+        .customer-label {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 20px;
+            color: #0F2319;
+
+        }
+
+        margin-bottom: 10px;
+    }
+}
+
+.item-print {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease-in-out;
+    animation: fade 0.4s ease-in-out;
+
+    .item-print-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+
+    }
+
+    .item-name {
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 20px;
+        color: #0F2319;
+    }
+
+    .item-price {
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 20px;
+        color: #0f231996;
+    }
+
+    .item-quantity {
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 20px;
+        color: #0f231996;
+
+    }
+
+    .item-total-unit {
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 20px;
+        color: #0f231996;
+
+    }
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 .sale-detail-form {
     width: 90%;
     background-color: #fff;
@@ -202,19 +316,29 @@ tbody .avatar {
     transition: all 0.3s ease-in-out;
     animation: slideLeft 0.2s ease-in-out;
 
+
+    .heading-print,
     .heading {
         font-size: 20px;
         font-weight: 500;
         line-height: 20px;
         color: #0F2319;
         margin-bottom: 20px;
-
+        position: relative;
         display: flex;
         flex-direction: row;
+        width: 100%;
 
         h1 {
             margin-right: 10px;
             text-align: start;
+            width: 100%;
+        }
+
+        .centerText {
+            margin-right: auto;
+            text-align: center;
+
         }
 
         .clear {
@@ -225,6 +349,30 @@ tbody .avatar {
             color: #0F2319;
             text-align: end;
             cursor: pointer;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+
+            .btn {
+                margin-left: 10px;
+
+            }
+        }
+    }
+
+    .heading-print {
+        display: flex;
+        flex-direction: column;
+
+        img {
+            //Center
+            margin: 0 auto;
+
+            width: 20%;
+            margin-bottom: 20px;
         }
     }
 
@@ -311,8 +459,8 @@ tbody .avatar {
         color: #B6CAC0;
 
         label {
-            font-weight: 500;
-            font-size: 12px;
+            font-weight: 400;
+            font-size: 1rem;
             line-height: 20px;
             color: #0F2319;
         }
@@ -320,17 +468,38 @@ tbody .avatar {
 
     .tax {
         margin-top: 10px;
+        font-weight: 400;
+        font-size: 1rem;
     }
 
     .total {
         margin-top: 20px;
         font-weight: 500;
-        font-size: 15px;
+        font-size: 1rem;
         line-height: 20px;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         color: #0F2319;
+    }
+
+    .label-profit {
+        margin-top: 20px;
+        font-weight: 500;
+        font-size: 1rem;
+        line-height: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        color: #0F2319;
+        margin-bottom: 20px;
+
+        label {
+            font-weight: 400;
+            font-size: 1rem;
+            line-height: 20px;
+            color: #0CE622;
+        }
     }
 
     .status {
@@ -408,6 +577,8 @@ tbody .avatar {
 
     .subtotal {
         margin-top: 20px;
+        font-weight: 300;
+        font-size: 1rem;
     }
 }
 
