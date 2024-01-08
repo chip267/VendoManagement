@@ -13,24 +13,24 @@ import CustomerApiController from "../../api/customer";
 import AddCustomerForm from "./components/addCustomerForm";
 import { useGlobalSnackbar } from "../Base/basePage";
 import { useGlobalConfirmDialog } from "../Base/componentContext/confirmDialog";
+import { useUserContext } from "../../context/UserContext";
 //import images from "../../assets/images";
 const testUrl = IMG_Logo;
 const cx = classNames.bind(styles);
-const maxItemsPerPage = 3;
 const defaultPage = 1;
 let totalCounts = 0;
-async function initCustomers() {
-  const response = await CustomerApiController.getCustomers({ page: defaultPage, limit: maxItemsPerPage });
-  if (response.success) {
-    let results = response.data.results;
-    totalCounts = response.data.totalDocuments;
-    console.log("Init customers: ", results);
-    return results;
-  }
-  return [];
-}
+// async function initCustomers() {
+//   const response = await CustomerApiController.getCustomers({ page: defaultPage, limit: paginationLimit });
+//   if (response.success) {
+//     let results = response.data.results;
+//     totalCounts = response.data.totalDocuments;
+//     console.log("Init customers: ", results);
+//     return results;
+//   }
+//   return [];
+// }
 function Customers() {
-
+  const { paginationLimit } = useUserContext();
   const [pageIndex, setPageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -58,7 +58,7 @@ function Customers() {
       if (response.success) {
         showSnackbar("Add customer successfully", "success");
         setShowAddCustomerForm(false);
-        fetchCustomers(pageIndex, maxItemsPerPage);
+        fetchCustomers(pageIndex, paginationLimit);
       }
       else {
         showSnackbar("Add customer failed", "error");
@@ -72,10 +72,17 @@ function Customers() {
       setIsAddingCustomer(false);
     }
   }
-  const fetchCustomers = async (page = defaultPage, limit = maxItemsPerPage) => {
+  const fetchCustomers = async (
+    page = defaultPage, limit = paginationLimit, name = null, phoneNumber = null
+  ) => {
     try {
       setIsLoading(true);
-      const response = await CustomerApiController.getCustomers({ page: page + 1, limit: limit });
+      const response = await CustomerApiController.getCustomers({
+        page: page + 1,
+        limit: limit,
+        name: name,
+        phoneNumber: phoneNumber
+      });
       if (response.success) {
         setCustomers(response.data.results);
         totalCounts = response.data.totalDocuments;
@@ -107,7 +114,7 @@ function Customers() {
           const response = await CustomerApiController.deleteCustomer(customer._id);
           if (response.success) {
             showSnackbar("Delete customer successfully", "success");
-            fetchCustomers(pageIndex, maxItemsPerPage);
+            fetchCustomers(pageIndex, paginationLimit);
           }
           else {
             showSnackbar("Delete customer failed", "error");
@@ -125,8 +132,19 @@ function Customers() {
 
     });
   }
+  const handleSearch = (event) => {
+    //If number, search using phone number
+    //if string, search using name
+    const value = event.target.value;
+    if (!isNaN(value)) {
+      fetchCustomers(pageIndex, paginationLimit, null, value);
+    }
+    else {
+      fetchCustomers(pageIndex, paginationLimit, value, null);
+    }
+  }
   useEffect(() => {
-    fetchCustomers(pageIndex, maxItemsPerPage);
+    fetchCustomers(pageIndex, paginationLimit);
   }, [pageIndex]);
 
   return (
@@ -143,20 +161,14 @@ function Customers() {
       </div>
       <div className={cx("btn-bar")}>
         <span>
-          <input className={cx("search-bar")} type="text number" placeholder="Search" />
+          <input className={cx("search-bar")} type="text number" placeholder="Search name or phone number" onChange={handleSearch} />
         </span>
         <span>
           <button className={cx("btn-add")} onClick={() => setShowAddCustomerForm(!showAddCustomerForm)}>
             {showAddCustomerForm ? "Cancel" : "Add"}
           </button>
         </span>
-        <span className={cx("btn-setting")}>
-          <button>
-            <svg className={cx("sliders-logo")} xmlns="http://www.w3.org/2000/svg" height="17" width="17" viewBox="0 0 512 512">
-              <path opacity="1" fill="#1E3050" d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
-            </svg>
-          </button>
-        </span>
+
       </div>
       <div className={cx("lower-container")}>
 
@@ -248,7 +260,7 @@ function Customers() {
       <div className={cx("pagination")} style={showAddCustomerForm ? { width: "70%" } : { width: "100%" }}>
         <Pagination
           className={cx("pagination")}
-          count={Math.ceil(totalCounts / maxItemsPerPage)}
+          count={Math.ceil(totalCounts / paginationLimit)}
           onChange={(event, page) => setPageIndex(page - 1)}
           variant="outlined"
           shape="rounded"
