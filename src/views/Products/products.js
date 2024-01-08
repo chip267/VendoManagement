@@ -14,10 +14,12 @@ import { CircularProgress } from "@mui/material";
 import { useGlobalSnackbar } from "../Base/basePage";
 import { useGlobalConfirmDialog } from "../Base/componentContext/confirmDialog";
 import DeleteProductButton from "./components/productAction/deleteProductButton";
+import { useUserContext } from "../../context/UserContext";
+import QuantitySelector from "./components/productAction/addDialog";
 const cx = classNames.bind(styles);
 
 //PRODUCT PAGE CONSTANTS:
-const maxItemPerPage = 6;
+
 let totalCounts = 0;
 // Define the options for the selection bar
 const options = [
@@ -35,26 +37,24 @@ const transitionTime = 500;
 //And total counts of products.
 //Each time a page change happens, we will update store products by calling api.
 //Get total counts of products from api
-async function initStoreProducts() {
-  const response = await ProductApiController.getProducts({ page: 1, limit: maxItemPerPage });
-  const results = response.data.results;
-  totalCounts = response.data.totalDocuments;
-  return results;
-}
 
 
 const Products = () => {
+  const { paginationLimit } = useUserContext();
   // Option for the type bar.
-  const [selectedFilterOption, setSelectedFilterOption] = useState('null');
+  const [selectedFilterOption, setSelectedFilterOption] = useState('all');
+  //For product action
+  const [isQuantitySelectorOpen, setIsQuantitySelectorOpen] = useState(false);
   //For order section
   const [isOrdering, setIsOrdering] = useState(false);
   const [orderCustomerId, setOrderCustomerId] = useState(null);
   //Used to check if customer buy at store,if yes, set order status to  "Delivered"
   const [orderStatus, setOrderStatus] = useState(null);
   //For product (left side)
+  const [searchText, setSearchText] = useState("");
   const [isDeletingProduct, setIsDeletingProduct] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [storeProducts, setStoreProducts] = useState(() => initStoreProducts());
+  const [storeProducts, setStoreProducts] = useState([]);
   const [pageIndex, setPageIndex] = useState(1);
   //For cart (right side)
   const [orderItems, setOrderItems] = useState([]);
@@ -64,6 +64,7 @@ const Products = () => {
   //On press add product button. Hide the cart section and show the add product 
   const [isAddProduct, setIsAddProduct] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
   //Snackbar and other misc
   const { showSnackbar } = useGlobalSnackbar();
   const { showDialog, hideDialog, setWaitting } = useGlobalConfirmDialog();
@@ -72,25 +73,49 @@ const Products = () => {
   //Use api on first render and when page change
   useEffect(() => {
     fetchProducts();
+    console.log("Page index: ", pageIndex);
   }, [pageIndex]);
+
   useEffect(() => {
     console.log("Selected product: ", selectedProduct);
 
   }, [selectedProduct]);
   //API
-  const fetchProducts = async () => {
+  const fetchProducts = async (filter) => {
     try {
       setLoading(true);
-      const response = await ProductApiController.getProducts({ page: pageIndex, limit: maxItemPerPage });
+      if (!filter) {
+        filter = {};
+      }
+
+      const response = await ProductApiController.getProducts(
+        {
+          page: pageIndex,
+          limit: paginationLimit,
+          productName: filter.productName ? filter.productName : null,
+          type: filter.type ? filter.type : null,
+          sellPriceFilter: filter.sellPriceFilter ? filter.sellPriceFilter : null,
+
+        });
+      console.log("Response: ", response);
       const results = response.data.results;
+      console.log("Results: ", results);
       //Test convert id to object id
-      totalCounts = response.data.totalDocuments;
+      totalCounts = response.data.totalFilterCount;
       setStoreProducts(results);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
     }
+  };
+  useEffect(() => {
+    setSelectedProduct(null);
+    fetchProducts({ productName: searchText });
+  }, [searchText]);
+  //On search text change
+  const onSearchTextChange = (event) => {
+    setSearchText(event.target.value);
   };
   //Add a new product to DB
   const addProductHandler = async ({
@@ -251,19 +276,29 @@ const Products = () => {
     setOrderItems([]);
     setOrderCustomerId(null);
   };
-
+  //On options change
+  const handleOptionsChange = (option) => {
+    setSelectedFilterOption(option.value);
+  };
+  useEffect(() => {
+    fetchProducts({ type: selectedFilterOption });
+    setPageIndex(1);
+  }, [selectedFilterOption]);
   //Used to update quantity to current cart
   const cart_UpdateProductQuantity = (index, increment) => {
     // Make a copy of the order items array
     let newItems = [...orderItems];
+    if (newItems[index].quantity === 0 && increment === -1) {
+      newItems = newItems.filter((item) => item.product._id !== newItems[index].product._id);
+      setOrderItems(newItems);
+      return;
+    }
     // Only decrement if the quantity is greater than 0
     if (newItems[index].quantity === 0 && increment === -1) {
       return;
     }
-    // If the quantity is 0 and the increment is -1, remove the item from the array
-    if (newItems[index].quantity === 0 && increment === -1) {
-      newItems.splice(index, 1);
-    }
+    // If the quantity is 1 and the user decrements, remove the item from the cart. Use _id 
+
     // Otherwise, update the quantity of the item
     newItems[index].quantity += increment;
     console.log("New items: ", newItems);
@@ -282,6 +317,7 @@ const Products = () => {
       showSnackbar("Product is out of stock", "error");
       return;
     }
+
     // Make a copy of the order items array
     let newItems = [...orderItems];
     // Check if the product is already in the cart
@@ -289,9 +325,17 @@ const Products = () => {
     // If the product is not in the cart
     if (index === -1) {
       // Add the product to the cart with a quantity of 1
+
+
       newItems.push({ product: product, quantity: 1 });
     } else {
+      //If current quantity when increased is greater than quantity of product, return
+      if (newItems[index].quantity + 1 > product.quantity) {
+        showSnackbar("Can't add more than quantity of product", "error");
+        return;
+      }
       // Otherwise, increment the quantity of the product in the cart
+
       newItems[index].quantity++;
     }
     // Set the new items array as the state
@@ -354,7 +398,24 @@ const Products = () => {
       setIsTransitioning(false);
     }, transitionTime);
   }
+  //Add quantity to product 
+  const addQuantityToProduct = async (quantity) => {
+    if (selectedProduct) {
+      try {
+        const res = await ProductApiController.updateProduct({
+          _id: selectedProduct._id,
+          productAction: "add",
+          productActionQuantity: quantity
+        });
+        console.log("Response: ", res);
+      }
+      catch (error) {
+        console.log("Add quantity to product failed");
+        console.log("Error: ", error);
+      }
 
+    }
+  }
   //************************************ */
 
   return (
@@ -365,7 +426,7 @@ const Products = () => {
       <div className={cx("btn-bar")}>
         <span className={cx("left-side-btn-group")}>
           <span>
-            <input className={cx("search-bar")} type="text number" placeholder="Search" />
+            <input className={cx("search-bar")} type="text number" placeholder="Product name" onChange={onSearchTextChange} />
           </span>
           <span>
             <button className={cx("btn-add")}
@@ -380,31 +441,28 @@ const Products = () => {
                 status={selectedProduct}
               />
             )}
+
+            {!isAddProduct ? null : (
+              <button className={cx("add-quantity-button", cx({ 'disabled': !selectedProduct }))} onClick={() => setIsQuantitySelectorOpen(true)}>
+                {selectedProduct ? "Add more to product" : "Select a product"}
+              </button>
+
+
+            )}
+            {isQuantitySelectorOpen ? (<QuantitySelector
+              onQuantityChange={(quantity) => addQuantityToProduct(quantity)}
+              onClose={() => setIsQuantitySelectorOpen(false)}
+            />) : null}
           </span>
         </span>
-        <span className={cx("right-side-btn-group")}>
-          <span className={cx("btn-plus") + " right-side-plus-btn"}>
-            <button>
-              <svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
-                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-              </svg>
-            </button>
-          </span>
-          <span className={cx("btn-setting") + " right-side-setting-btn"}>
-            <button>
-              <svg className={cx("sliders-logo")} xmlns="http://www.w3.org/2000/svg" height="17" width="17" viewBox="0 0 512 512">
-                <path opacity="1" fill="#1E3050" d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
-              </svg>
-            </button>
-          </span>
-        </span>
+
       </div>
       <div className={cx("selectionBar")}>
         {options.map((option) => (
           <button
             key={option.value}
-            onClick={() => setSelectedFilterOption(option)}
-            className={`${cx("selectionItem")} ${option.value === selectedFilterOption.value && selectedFilterOption !== null ? styles.selected : ""
+            onClick={() => handleOptionsChange(option)}
+            className={`${cx("selectionItem")} ${option.value === selectedFilterOption ? styles.selected : ""
               }`}
           >
             {option.label}
@@ -423,7 +481,7 @@ const Products = () => {
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
             <Pagination
-              count={Math.ceil(totalCounts / maxItemPerPage)}
+              count={Math.ceil(totalCounts / paginationLimit)}
               page={pageIndex}
               onChange={(event, value) => setPageIndex(value)}
               className={styles.pagination}

@@ -21,13 +21,17 @@ function ProductCart({
     const SubmitButton = (onPress) => {
         return (
             <div className={cx("btn-payment")} onClick={onPress}>
-                <button className={cx("btn")}>Payment</button>
+                <button className={cx("btn")}>Process</button>
             </div>
         );
     }
     return (<div className={styles.payment + " " + addtionalContainerClassName} key={key}>
         <div className={styles.heading}>
-            <h1>Customer Order</h1>
+            <h2
+                style={{
+                    fontSize: "1.2rem", marginBottom: "0"
+                }}
+            >Customer Order</h2>
             <button className={styles.clear} onClick={clearOrder}>
                 Clear
             </button>
@@ -47,6 +51,6 @@ function ProductCart({
             submitButton={SubmitButton(onSubmit)}
             setOrderStatus={setOrderStatus}
         />
-    </div>);
+    </div >);
 }
 export default ProductCart;

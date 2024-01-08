@@ -16,7 +16,7 @@
   line-height: 20px;
   font-weight: 500;
 
-  color: #0F2319;
+  color: #2C7A51;
 }
 
 /* Navigation bar */
@@ -181,6 +181,7 @@
   }
 
 }
+
 
 .product {
   display: flex;
@@ -490,19 +491,11 @@
 
 
 
-.heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #0F2319;
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 17px;
-}
+
 
 .clear {
   padding: 10px;
-  font-size: 24px;
+  font-size: 1.2rem;
   color: #B6CAC0;
   //background-color: red;
   border: none;
@@ -568,12 +561,13 @@
 }
 
 .quantity {
-  font-size: 12px;
+  font-size: 16px;
   width: 30%;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
   gap: 8px;
+  color: #0F2319;
 }
 
 .order-item-detail {
@@ -637,15 +631,16 @@
   }
 }
 
+.add-quantity-button,
 .delete-product-button {
   //Red
   background-color: #E74C3C;
   color: white;
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 1rem;
   font-weight: 500;
   width: 15%;
-  height: 37px;
+  height: 45px;
   margin-left: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
@@ -656,6 +651,29 @@
 
   //Add a button slide up animation at start
   animation: buttonSlideUp 0.5s ease-in-out forwards;
+
+}
+
+.add-quantity-button {
+  //Green
+  background-color: #2C7A51;
+  color: white;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  width: 15%;
+  height: 45px;
+  margin-left: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #1e5633;
+  }
+
+  //Add a button slide up animation at start
+  animation: buttonSlideUp 0.5s ease-in-out forwards;
+
 
 }
 
@@ -728,5 +746,20 @@
       background-color: #369763;
     }
   }
+
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #0F2319;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 17px;
+
+
+
+
 
 }
